@@ -1,0 +1,49 @@
+{
+  "id": "cobbleverse",
+  "slug": "cobbleverse",
+  "name": "COBBLEVERSE - Pokemon Adventure",
+  "summary": "Cobblemon 기반의 본격 포켓몬 어드벤처 모드팩. 체육관 도전, 진화, 트레이너 배틀까지 마인크래프트 안에서 정통 포켓몬 RPG를 경험하세요.",
+  "description": "COBBLEVERSE는 Cobblemon 모드를 기반으로 제작된 정통 포켓몬 어드벤처 모드팩입니다. 단순히 포켓몬을 잡는 것을 넘어, 체육관 시스템, 트레이너 배틀, 스토리 진행, 진화 시스템 등 본격적인 포켓몬 RPG의 경험을 마인크래프트 안에서 그대로 재현합니다.\n\n월드 생성 시 포켓몬이 자연 스폰되며, 몬스터볼을 만들어 포획할 수 있습니다. 잡은 포켓몬을 훈련시키고 진화시켜 강력한 팀을 구성하세요.\n\n맵 곳곳에 위치한 체육관에 도전하여 배지를 모으고, 최종적으로 챔피언이 되는 것이 목표입니다. 포켓몬 팬이라면 절대 놓치지 말아야 할 모드팩입니다.",
+  "minecraftVersion": "1.21.1",
+  "loader": "Fabric",
+  "tags": ["포켓몬", "RPG", "어드벤처", "퀘스트", "Cobblemon"],
+  "difficulty": "normal",
+  "playStyle": ["RPG", "어드벤처", "수집", "전투"],
+  "featured": true,
+  "coverImage": "/images/modpacks/cobbleverse-cover.png",
+  "galleryImages": [],
+  "includedMods": ["cobblemon"],
+  "tips": [
+    {
+      "title": "스타팅 포켓몬 선택",
+      "content": "월드 시작 시 또는 특정 NPC에게서 스타터 포켓몬을 받을 수 있습니다. 풀/불/물 타입 중 플레이 스타일에 맞는 것을 선택하세요."
+    },
+    {
+      "title": "몬스터볼 제작",
+      "content": "사과(Apricorn)를 채취해 말리고, Cobblemon의 제작대에서 다양한 종류의 몬스터볼을 만들 수 있습니다. 초반에는 일반 몬스터볼부터 시작하세요."
+    },
+    {
+      "title": "포켓몬 훈련",
+      "content": "야생 포켓몬과 전투해서 경험치를 얻고 레벨을 올리세요. 특정 레벨에 도달하거나 특수 아이템을 사용하면 진화합니다."
+    },
+    {
+      "title": "체육관 도전 순서",
+      "content": "체육관마다 권장 레벨이 다릅니다. 가까운 곳부터 차근차근 도전하세요. 타입 상성을 이해하면 훨씬 쉬워집니다."
+    }
+  ],
+  "faq": [
+    {
+      "question": "포켓몬이 안 보여요.",
+      "answer": "포켓몬은 바이옴별로 다른 종류가 스폰됩니다. 다양한 바이옴을 탐험하면서 찾아보세요. 시간대(낮/밤)에 따라서도 스폰이 달라집니다."
+    },
+    {
+      "question": "전설의 포켓몬은 어디에 있나요?",
+      "answer": "전설 포켓몬은 매우 드물게 특정 조건에서만 스폰됩니다. 모드팩 내 가이드북이나 디스코드를 참고하세요."
+    },
+    {
+      "question": "포켓몬을 PC에 보관할 수 있나요?",
+      "answer": "네, Cobblemon의 PC 시스템을 사용할 수 있습니다. PC를 제작하거나 NPC 근처에서 포켓몬을 박스에 보관/교체할 수 있습니다."
+    }
+  ],
+  "relatedModpacks": ["all-the-mons", "rlcraft"]
+}

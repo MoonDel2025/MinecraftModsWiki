@@ -1,0 +1,93 @@
+---
+/**
+ * 가이드 카드 - 책 & 퀘스트북 느낌
+ */
+interface Props {
+  slug: string;
+  title: string;
+  summary: string;
+  category: string;
+}
+
+const { slug, title, summary, category } = Astro.props;
+---
+
+<a href={`/guides/${slug}/`} class="guide-card">
+  <div class="guide-card__marker" aria-hidden="true"></div>
+  <div class="guide-card__body">
+    <span class="mc-badge mc-badge--tag">{category}</span>
+    <h3 class="guide-card__title">{title}</h3>
+    <p class="guide-card__summary">{summary}</p>
+    <span class="guide-card__cta">읽어보기 →</span>
+  </div>
+</a>
+
+<style>
+  .guide-card {
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: all var(--transition-normal);
+  }
+
+  .guide-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-color-light);
+  }
+
+  /* 왼쪽 책갈피 마커 */
+  .guide-card__marker {
+    width: 4px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, var(--color-oak-plank) 0%, var(--color-oak-dark) 100%);
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    transition: background var(--transition-fast);
+  }
+
+  .guide-card:hover .guide-card__marker {
+    background: linear-gradient(180deg, var(--color-gold) 0%, var(--color-oak-plank) 100%);
+  }
+
+  .guide-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-5);
+    flex: 1;
+  }
+
+  .guide-card__title {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--text-heading);
+    transition: color var(--transition-fast);
+  }
+
+  .guide-card:hover .guide-card__title { color: var(--color-gold); }
+
+  .guide-card__summary {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .guide-card__cta {
+    font-size: var(--font-size-sm);
+    color: var(--text-link);
+    font-weight: 600;
+    margin-top: var(--space-1);
+    transition: color var(--transition-fast);
+  }
+
+  .guide-card:hover .guide-card__cta { color: var(--text-link-hover); }
+</style>

@@ -1,0 +1,222 @@
+---
+/**
+ * 모드팩 카드 - 100x100 썸네일 + 가로 레이아웃
+ * 인벤토리 슬롯 영감 디자인
+ */
+import DifficultyBadge from './DifficultyBadge.astro';
+import LoaderBadge from './LoaderBadge.astro';
+
+interface Props {
+  slug: string;
+  name: string;
+  summary: string;
+  minecraftVersion: string;
+  loader: string;
+  difficulty: string;
+  tags: string[];
+  featured?: boolean;
+  coverImage?: string;
+}
+
+const { slug, name, summary, minecraftVersion, loader, difficulty, tags, featured, coverImage } = Astro.props;
+---
+
+<a href={`/modpacks/${slug}/`} class="modpack-card" data-featured={featured || undefined}>
+  <!-- 썸네일 100x100 -->
+  <div class="modpack-card__thumb">
+    {coverImage ? (
+      <img src={coverImage} alt={`${name} 커버 이미지`} loading="lazy" />
+    ) : (
+      <div class="modpack-card__placeholder" aria-hidden="true">
+        <span>⛏</span>
+      </div>
+    )}
+    {featured && (
+      <span class="modpack-card__featured-badge" title="추천">★</span>
+    )}
+  </div>
+
+  <!-- 정보 -->
+  <div class="modpack-card__body">
+    <h3 class="modpack-card__title">{name}</h3>
+    <div class="modpack-card__meta">
+      <span class="mc-badge">MC {minecraftVersion}</span>
+      <LoaderBadge loader={loader} />
+      <DifficultyBadge difficulty={difficulty} />
+      {tags.slice(0, 2).map(tag => (
+        <span class="mc-badge mc-badge--tag">{tag}</span>
+      ))}
+    </div>
+    <p class="modpack-card__summary">{summary}</p>
+  </div>
+
+  <div class="modpack-card__glow" aria-hidden="true"></div>
+</a>
+
+<style>
+  .modpack-card {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-4);
+    padding: var(--space-3);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+
+    /* 인벤토리 슬롯 영감 */
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 rgba(255,255,255,0.04),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+    transition: all var(--transition-normal);
+  }
+
+  /* 호버 글로우 엣지 */
+  .modpack-card__glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(74,237,217,0.15), transparent 40%, transparent 60%, rgba(252,219,5,0.1)) border-box;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+  }
+
+  .modpack-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      var(--shadow-md),
+      0 0 0 1px rgba(74,237,217,0.06);
+    border-color: var(--border-color-light);
+  }
+
+  .modpack-card:hover .modpack-card__glow { opacity: 1; }
+
+  /* 추천 카드 */
+  .modpack-card[data-featured] {
+    border-color: rgba(252,219,5,0.15);
+  }
+
+  .modpack-card[data-featured]:hover {
+    box-shadow:
+      var(--shadow-md),
+      0 0 16px rgba(252,219,5,0.08);
+  }
+
+  /* ============ 100x100 썸네일 (인벤토리 슬롯) ============ */
+  .modpack-card__thumb {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: #14181F;
+    /* 슬롯 안쪽 음각 효과 */
+    border: 2px solid #1A1A1A;
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.5),
+      inset 1px 1px 0 rgba(255,255,255,0.04),
+      inset -1px -1px 0 rgba(0,0,0,0.3);
+  }
+
+  .modpack-card__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: -webkit-optimize-contrast;
+    transition: transform var(--transition-normal);
+  }
+
+  .modpack-card:hover .modpack-card__thumb img {
+    transform: scale(1.06);
+  }
+
+  /* 플레이스홀더 */
+  .modpack-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    opacity: 0.3;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,0.025) 19px, rgba(255,255,255,0.025) 20px),
+      repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,0.025) 19px, rgba(255,255,255,0.025) 20px),
+      linear-gradient(135deg, #1A1F28 0%, #14181F 100%);
+  }
+
+  /* 추천 별 - 슬롯 코너 */
+  .modpack-card__featured-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 2;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-gold);
+    background: rgba(0,0,0,0.65);
+    border: 1px solid rgba(252,219,5,0.4);
+    border-radius: var(--radius-sm);
+    text-shadow: 0 0 4px rgba(252,219,5,0.6);
+  }
+
+  /* ============ 바디 ============ */
+  .modpack-card__body {
+    flex: 1;
+    min-width: 0; /* flex 자식 텍스트 오버플로 방지 */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: 2px 0;
+  }
+
+  .modpack-card__title {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--text-heading);
+    transition: color var(--transition-fast);
+    line-height: 1.3;
+    /* 한 줄 말줄임 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .modpack-card:hover .modpack-card__title {
+    color: var(--color-diamond);
+  }
+
+  .modpack-card[data-featured]:hover .modpack-card__title {
+    color: var(--color-gold);
+  }
+
+  .modpack-card__summary {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .modpack-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+</style>

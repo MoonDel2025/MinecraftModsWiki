@@ -1,0 +1,16 @@
+{
+  "name": "minecraft-mod-wiki",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "마인크래프트 모드팩/모드 정보 위키 사이트",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "astro": "^6.1.4"
+  }
+}

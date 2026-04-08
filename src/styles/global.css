@@ -1,0 +1,663 @@
+/* ============================================
+   마인크래프트 모드 위키 - 글로벌 스타일
+   마인크래프트 UI에서 영감을 받은 모던 게임 위키 디자인
+   ============================================ */
+
+/* --- CSS 변수 (디자인 토큰) --- */
+:root {
+  /* 마인크래프트 블록 컬러 (영감 기반) */
+  --color-dirt: #866043;
+  --color-dirt-dark: #5C3D2E;
+  --color-dirt-deep: #3D2817;
+  --color-grass: #5B8731;
+  --color-grass-light: #7CB342;
+  --color-grass-dark: #3E6B1F;
+  --color-stone: #8A8A8A;
+  --color-stone-dark: #636363;
+  --color-stone-deeper: #48484A;
+  --color-deepslate: #505056;
+  --color-oak-plank: #B8945F;
+  --color-oak-dark: #7A6238;
+  --color-spruce: #6B5130;
+  --color-obsidian: #1A1028;
+  --color-nether: #8B2500;
+  --color-netherrack: #6B2A2A;
+  --color-nether-glow: #FF6B35;
+  --color-end: #2A1A4A;
+  --color-end-stone: #D9D29E;
+  --color-end-glow: #C882FF;
+  --color-gold: #FCDB05;
+  --color-diamond: #4AEDD9;
+  --color-emerald: #17DD62;
+  --color-redstone: #D4201E;
+  --color-lapis: #345EC3;
+  --color-iron: #D8D8D8;
+  --color-copper: #C37B53;
+  --color-amethyst: #9B6BBF;
+
+  /* UI 컬러 - 깊은 동굴 분위기 기반 */
+  --bg-primary: #191B1F;
+  --bg-secondary: #1E2025;
+  --bg-card: #24272D;
+  --bg-card-hover: #2C3039;
+  --bg-surface: #131517;
+  --bg-input: #1A1C21;
+  --bg-elevated: #2A2E36;
+
+  --text-primary: #E4E4E8;
+  --text-secondary: #A0A4B0;
+  --text-muted: #5E6270;
+  --text-heading: #F2F2F5;
+  --text-link: #4AEDD9;
+  --text-link-hover: #7FF5E8;
+
+  --border-color: #32363F;
+  --border-color-light: #40454F;
+  --border-accent: #4AEDD9;
+
+  /* 인벤토리 슬롯 스타일 */
+  --slot-bg: #1A1C21;
+  --slot-border-outer: #1A1A1A;
+  --slot-border-inner-light: #555568;
+  --slot-border-inner-dark: #2A2A35;
+
+  /* 난이도 컬러 */
+  --difficulty-easy: #17DD62;
+  --difficulty-normal: #FCDB05;
+  --difficulty-hard: #FF6B35;
+  --difficulty-expert: #D4201E;
+  --difficulty-master: #C882FF;
+
+  /* 로더 컬러 */
+  --loader-forge: #DFA86A;
+  --loader-fabric: #DBD0B4;
+  --loader-neoforge: #F78C6C;
+  --loader-quilt: #A855F7;
+
+  /* 간격 시스템 (4px 기반) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* 폰트 */
+  --font-sans: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-pixel: 'DungGeunMo', 'Press Start 2P', monospace;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+
+  /* 둥글기 - 블록 느낌과 모던 사이 */
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+
+  /* 그림자 */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.5);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.6);
+  --shadow-glow-diamond: 0 0 20px rgba(74,237,217,0.15), 0 0 4px rgba(74,237,217,0.3);
+  --shadow-glow-emerald: 0 0 20px rgba(23,221,98,0.15);
+  --shadow-glow-gold: 0 0 20px rgba(252,219,5,0.12);
+  --shadow-inset-slot: inset 0 2px 4px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04);
+
+  /* 트랜지션 */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* 레이아웃 */
+  --max-width: 1280px;
+  --header-height: 60px;
+}
+
+/* --- 리셋 & 기본 --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: 1.7;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* 미묘한 깊이감 - 채굴장 깊은 곳 분위기 */
+  background-image:
+    radial-gradient(ellipse at 15% 10%, rgba(74,237,217,0.025) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 80%, rgba(200,130,255,0.02) 0%, transparent 50%);
+}
+
+/* --- 타이포그래피 --- */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-heading);
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+
+/* 픽셀 폰트 강조용 클래스 */
+.pixel-text {
+  font-family: var(--font-pixel);
+  letter-spacing: 1px;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover { color: var(--text-link-hover); }
+
+a:focus-visible {
+  outline: 2px solid var(--border-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul, ol { list-style: none; }
+
+/* --- 유틸리티 --- */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* =============================================
+   섹션 타이틀 - 광물 느낌의 데코레이션
+   ============================================= */
+.section-title {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 2px solid var(--border-color);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-diamond), transparent);
+}
+
+/* =============================================
+   인벤토리 슬롯 스타일 카드
+   마인크래프트 인벤토리의 내부 슬롯에서 영감
+   ============================================= */
+.mc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast);
+  position: relative;
+}
+
+.mc-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 40%) border-box;
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.mc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(74,237,217,0.08);
+  border-color: var(--border-color-light);
+}
+
+/* 인벤토리 슬롯 변형 - 더 강한 슬롯 느낌 */
+.mc-slot {
+  background: var(--slot-bg);
+  border: 2px solid var(--slot-border-outer);
+  border-radius: var(--radius-sm);
+  box-shadow:
+    var(--shadow-inset-slot),
+    inset 1px 1px 0 var(--slot-border-inner-light),
+    inset -1px -1px 0 var(--slot-border-inner-dark);
+  position: relative;
+}
+
+/* =============================================
+   버튼 - 돌 버튼에서 영감
+   ============================================= */
+.mc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  background: linear-gradient(180deg, #3A3D45 0%, #2D3038 100%);
+  border: 1px solid var(--border-color-light);
+  border-bottom: 3px solid #1E2025;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.mc-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+}
+
+.mc-btn:hover {
+  background: linear-gradient(180deg, #444850 0%, #383C45 100%);
+  border-color: #555;
+  color: var(--text-heading);
+  transform: translateY(-1px);
+}
+
+.mc-btn:active {
+  transform: translateY(1px);
+  border-bottom-width: 1px;
+  margin-bottom: 2px;
+}
+
+.mc-btn--primary {
+  background: linear-gradient(180deg, var(--color-grass) 0%, var(--color-grass-dark) 100%);
+  border-color: var(--color-grass-dark);
+  border-bottom-color: #2A4C15;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.mc-btn--primary:hover {
+  background: linear-gradient(180deg, var(--color-grass-light) 0%, var(--color-grass) 100%);
+  color: #fff;
+}
+
+.mc-btn--accent {
+  background: linear-gradient(180deg, rgba(74,237,217,0.2) 0%, rgba(74,237,217,0.1) 100%);
+  border-color: rgba(74,237,217,0.3);
+  border-bottom-color: rgba(74,237,217,0.15);
+  color: var(--color-diamond);
+}
+
+.mc-btn--accent:hover {
+  background: linear-gradient(180deg, rgba(74,237,217,0.3) 0%, rgba(74,237,217,0.15) 100%);
+  color: #fff;
+  box-shadow: var(--shadow-glow-diamond);
+}
+
+/* =============================================
+   배지/태그 - 인챈트 라벨 느낌
+   ============================================= */
+.mc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px 8px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* 난이도 */
+.mc-badge--difficulty-easy { background: rgba(23,221,98,0.12); color: var(--difficulty-easy); border-color: rgba(23,221,98,0.25); }
+.mc-badge--difficulty-normal { background: rgba(252,219,5,0.12); color: var(--difficulty-normal); border-color: rgba(252,219,5,0.25); }
+.mc-badge--difficulty-hard { background: rgba(255,107,53,0.12); color: var(--difficulty-hard); border-color: rgba(255,107,53,0.25); }
+.mc-badge--difficulty-expert { background: rgba(212,32,30,0.12); color: var(--difficulty-expert); border-color: rgba(212,32,30,0.25); }
+.mc-badge--difficulty-master { background: rgba(200,130,255,0.12); color: var(--difficulty-master); border-color: rgba(200,130,255,0.25); box-shadow: 0 0 8px rgba(200,130,255,0.1); }
+
+/* 로더 */
+.mc-badge--forge { background: rgba(223,168,106,0.12); color: var(--loader-forge); border-color: rgba(223,168,106,0.25); }
+.mc-badge--fabric { background: rgba(219,208,180,0.12); color: var(--loader-fabric); border-color: rgba(219,208,180,0.25); }
+.mc-badge--neoforge { background: rgba(247,140,108,0.12); color: var(--loader-neoforge); border-color: rgba(247,140,108,0.25); }
+.mc-badge--quilt { background: rgba(168,85,247,0.12); color: var(--loader-quilt); border-color: rgba(168,85,247,0.25); }
+
+.mc-badge--featured {
+  background: rgba(252,219,5,0.12);
+  color: var(--color-gold);
+  border-color: rgba(252,219,5,0.3);
+  box-shadow: 0 0 6px rgba(252,219,5,0.1);
+}
+
+.mc-badge--tag {
+  background: rgba(74,237,217,0.08);
+  color: rgba(74,237,217,0.85);
+  border-color: rgba(74,237,217,0.15);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mc-badge--tag:hover {
+  background: rgba(74,237,217,0.18);
+  border-color: rgba(74,237,217,0.35);
+  color: var(--color-diamond);
+}
+
+/* =============================================
+   툴팁 스타일 정보 박스
+   마인크래프트 아이템 툴팁에서 영감
+   ============================================= */
+.mc-tooltip {
+  background: linear-gradient(180deg, #1A0A2E 0%, #100720 100%);
+  border: 2px solid #28007A;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  box-shadow:
+    0 0 0 1px rgba(80,0,200,0.3),
+    0 4px 16px rgba(0,0,0,0.6);
+  position: relative;
+}
+
+.mc-tooltip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(100,40,200,0.2);
+  pointer-events: none;
+}
+
+.mc-tooltip__title {
+  color: var(--color-gold);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-1);
+}
+
+.mc-tooltip__desc {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.mc-tooltip__rare {
+  color: var(--color-diamond);
+  font-size: var(--font-size-xs);
+  margin-top: var(--space-2);
+  font-style: italic;
+}
+
+/* =============================================
+   경고/팁 박스 - 표지판 & 책 느낌
+   ============================================= */
+.mc-callout {
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  margin: var(--space-4) 0;
+  position: relative;
+  border: 1px solid;
+}
+
+.mc-callout--tip {
+  background: linear-gradient(135deg, rgba(23,221,98,0.06) 0%, rgba(23,221,98,0.02) 100%);
+  border-color: rgba(23,221,98,0.2);
+  border-left: 3px solid var(--color-emerald);
+}
+
+.mc-callout--warning {
+  background: linear-gradient(135deg, rgba(252,219,5,0.06) 0%, rgba(252,219,5,0.02) 100%);
+  border-color: rgba(252,219,5,0.2);
+  border-left: 3px solid var(--color-gold);
+}
+
+.mc-callout--danger {
+  background: linear-gradient(135deg, rgba(212,32,30,0.06) 0%, rgba(212,32,30,0.02) 100%);
+  border-color: rgba(212,32,30,0.2);
+  border-left: 3px solid var(--color-redstone);
+}
+
+.mc-callout--info {
+  background: linear-gradient(135deg, rgba(52,94,195,0.06) 0%, rgba(52,94,195,0.02) 100%);
+  border-color: rgba(52,94,195,0.2);
+  border-left: 3px solid var(--color-lapis);
+}
+
+.mc-callout__title {
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+.mc-callout--tip .mc-callout__title { color: var(--color-emerald); }
+.mc-callout--warning .mc-callout__title { color: var(--color-gold); }
+.mc-callout--danger .mc-callout__title { color: var(--color-redstone); }
+.mc-callout--info .mc-callout__title { color: var(--color-lapis); }
+
+/* =============================================
+   검색 입력 - 표지판에 글씨 쓰는 느낌
+   ============================================= */
+.mc-search {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  padding-left: var(--space-10);
+  background: var(--bg-input);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-family: var(--font-sans);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: var(--shadow-inset-slot);
+}
+
+.mc-search:focus {
+  outline: none;
+  border-color: var(--color-diamond);
+  box-shadow: var(--shadow-inset-slot), 0 0 0 3px rgba(74,237,217,0.1);
+}
+
+.mc-search::placeholder { color: var(--text-muted); }
+
+/* =============================================
+   섹션 배경 테마 - 블록 소재 연상
+   ============================================= */
+
+/* 돌(Stone) 배경 */
+.bg-stone {
+  background:
+    linear-gradient(180deg, var(--bg-primary) 0%, #1C1D22 50%, var(--bg-primary) 100%);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+}
+
+.bg-stone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.008) 60px, rgba(255,255,255,0.008) 61px),
+    repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.008) 60px, rgba(255,255,255,0.008) 61px);
+  pointer-events: none;
+}
+
+/* 참나무 판자(Oak Plank) 배경 */
+.bg-wood {
+  background: linear-gradient(180deg,
+    var(--bg-primary) 0%,
+    #1F1A14 4%, #1F1A14 96%,
+    var(--bg-primary) 100%
+  );
+  border-top: 1px solid rgba(184,148,95,0.12);
+  border-bottom: 1px solid rgba(184,148,95,0.12);
+  position: relative;
+}
+
+.bg-wood::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 120px, rgba(184,148,95,0.03) 120px, rgba(184,148,95,0.03) 121px);
+  pointer-events: none;
+}
+
+/* 네더(Nether) 배경 */
+.bg-nether {
+  background: linear-gradient(180deg,
+    var(--bg-primary) 0%,
+    #1A0E0E 4%, #1A0E0E 96%,
+    var(--bg-primary) 100%
+  );
+  border-top: 1px solid rgba(139,37,0,0.15);
+  border-bottom: 1px solid rgba(139,37,0,0.15);
+}
+
+/* 엔드(End) 배경 */
+.bg-end {
+  background: linear-gradient(180deg,
+    var(--bg-primary) 0%,
+    #120E1E 4%, #120E1E 96%,
+    var(--bg-primary) 100%
+  );
+  border-top: 1px solid rgba(200,130,255,0.1);
+  border-bottom: 1px solid rgba(200,130,255,0.1);
+}
+
+/* 광물 글로우 장식 - 드문드문 빛나는 광물 */
+.bg-ore-glow {
+  position: relative;
+}
+
+.bg-ore-glow::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+  background: var(--color-diamond);
+  box-shadow: 0 0 6px 2px rgba(74,237,217,0.3);
+  top: 20%;
+  right: 8%;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* =============================================
+   구분선 - 블록 가장자리 느낌
+   ============================================= */
+.mc-divider {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--border-color) 15%,
+    var(--border-color-light) 50%,
+    var(--border-color) 85%,
+    transparent 100%
+  );
+  margin: var(--space-8) 0;
+}
+
+/* --- 반응형 --- */
+@media (max-width: 768px) {
+  :root {
+    --font-size-5xl: 2.25rem;
+    --font-size-4xl: 1.75rem;
+    --font-size-3xl: 1.5rem;
+    --font-size-2xl: 1.25rem;
+  }
+
+  .container {
+    padding: 0 var(--space-3);
+  }
+}
+
+/* 포커스 가시성 (접근성) */
+:focus-visible {
+  outline: 2px solid var(--border-accent);
+  outline-offset: 2px;
+}
+
+/* 스크롤바 커스텀 - 돌 느낌 */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-surface); }
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 2px;
+  border: 1px solid var(--bg-surface);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--border-color-light); }
+
+/* 선택 영역 */
+::selection {
+  background: rgba(74,237,217,0.25);
+  color: #fff;
+}

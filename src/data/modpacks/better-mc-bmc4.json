@@ -1,0 +1,49 @@
+{
+  "id": "better-mc-bmc4",
+  "slug": "better-mc-bmc4",
+  "name": "Better MC [FORGE] BMC4",
+  "summary": "바닐라 마인크래프트의 매력은 유지하면서 그래픽, 콘텐츠, 던전, 음악, QoL을 대폭 강화한 종합 향상 모드팩.",
+  "description": "Better MC [FORGE] BMC4는 바닐라 마인크래프트의 본질을 해치지 않으면서, 그래픽과 콘텐츠를 대폭 향상시킨 종합 모드팩입니다. 200개 이상의 엄선된 모드가 조화롭게 통합되어 있습니다.\n\n시각적으로는 셰이더, 향상된 텍스처, 동적 조명, 새로운 애니메이션이 포함되어 있어 마인크래프트가 완전히 다른 게임처럼 보입니다. 콘텐츠 면에서는 새로운 던전, 보스, 구조물, 바이옴, 몹이 추가되어 탐험할 거리가 풍부합니다.\n\n복잡한 진행형 모드팩이 부담스럽지만, 바닐라보다 풍성한 경험을 원하는 플레이어에게 완벽한 선택입니다. 친구들과 멀티플레이하기에도 좋습니다.",
+  "minecraftVersion": "1.20.1",
+  "loader": "Forge",
+  "tags": ["바닐라+", "그래픽", "탐험", "던전", "QoL"],
+  "difficulty": "normal",
+  "playStyle": ["서바이벌", "탐험", "건축", "모험"],
+  "featured": true,
+  "coverImage": "/images/modpacks/bmc4-cover.png",
+  "galleryImages": [],
+  "includedMods": ["alex-mobs", "aether", "ice-and-fire"],
+  "tips": [
+    {
+      "title": "셰이더 활성화",
+      "content": "내장된 Iris/Oculus 셰이더를 활성화하면 그래픽이 극적으로 향상됩니다. 단, 사양에 따라 프레임이 떨어질 수 있으니 본인 PC에 맞는 셰이더를 선택하세요."
+    },
+    {
+      "title": "새로운 바이옴 탐험",
+      "content": "Biomes O' Plenty와 Terralith가 결합되어 수많은 새로운 바이옴이 추가됩니다. 멀리 탐험할수록 색다른 풍경을 만날 수 있습니다."
+    },
+    {
+      "title": "던전 보상",
+      "content": "추가된 던전에서는 강력한 무기와 방어구를 얻을 수 있습니다. When Dungeons Arise, Dungeons Arise: Seven Seas 등의 구조물을 찾아보세요."
+    },
+    {
+      "title": "QoL 키 단축",
+      "content": "다양한 편의 모드가 추가되어 있습니다. JEI(R/U), 미니맵(M), 백팩(B) 등 단축키를 알아두면 편리합니다."
+    }
+  ],
+  "faq": [
+    {
+      "question": "프레임이 낮아요.",
+      "answer": "셰이더를 끄거나 더 가벼운 셰이더로 변경하세요. 렌더 거리를 10 청크 이하로 줄이고, RAM을 6~8GB로 할당하세요."
+    },
+    {
+      "question": "어떤 모드가 들어 있는지 다 알아야 하나요?",
+      "answer": "아니요. 바닐라처럼 자연스럽게 플레이하다가 새로운 아이템을 만나면 JEI로 확인하면 됩니다. 부담 없이 즐기세요."
+    },
+    {
+      "question": "친구와 함께 플레이할 수 있나요?",
+      "answer": "네, 멀티플레이가 잘 지원됩니다. Aternos나 직접 서버를 구축해서 친구들과 함께 즐겨보세요."
+    }
+  ],
+  "relatedModpacks": ["all-the-mods-10", "deceasedcraft"]
+}

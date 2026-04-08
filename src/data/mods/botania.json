@@ -1,0 +1,21 @@
+{
+  "id": "botania",
+  "slug": "botania",
+  "name": "Botania",
+  "summary": "꽃과 자연의 힘으로 마법을 사용하는 기술-마법 하이브리드 모드. 자동화와 마법의 조화.",
+  "description": "Botania는 '자연의 마법'을 테마로 한 모드입니다. 겉보기에는 마법 모드처럼 보이지만, 실제로는 레드스톤과 자동화를 핵심으로 한 기술 모드에 가깝습니다.\n\n마나(Mana)를 생성하는 꽃, 마나로 작동하는 기능성 꽃, 마나를 저장하고 전송하는 시스템을 구축하며 진행합니다. Lexica Botania(인게임 가이드북)가 매우 잘 만들어져 있어, 모드 내에서 모든 정보를 확인할 수 있습니다.\n\n최종 목표는 가이아 가디언 보스를 처치하고 강력한 장비와 도구를 제작하는 것입니다.",
+  "category": "마법",
+  "tags": ["마법", "자동화", "자연", "보스", "장비"],
+  "availableInModpacks": ["all-the-mods-10", "all-the-mons"],
+  "helpfulTips": [
+    "Lexica Botania를 꼭 읽으세요. 이 모드의 모든 정보가 담겨 있습니다.",
+    "Endoflame(석탄 태우는 꽃)이 초반 마나 생성의 핵심입니다.",
+    "마나 스프레더로 마나를 마나 풀에 전송하는 것이 기본 구조입니다.",
+    "가이아 가디언은 Botania 장비 없이는 매우 어렵습니다."
+  ],
+  "confusingPoints": [
+    "마나 수치가 눈에 보이지 않아 처음에는 감이 안 올 수 있습니다. 마나 풀의 색상 변화로 양을 판단하세요.",
+    "Wand of the Forest로 마나 스프레더를 마나 풀에 바인딩해야 합니다 (Shift+우클릭)."
+  ],
+  "relatedMods": ["mekanism", "tinkers-construct"]
+}

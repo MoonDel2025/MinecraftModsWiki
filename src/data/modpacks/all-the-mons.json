@@ -1,0 +1,49 @@
+{
+  "id": "all-the-mons",
+  "slug": "all-the-mons",
+  "name": "All the Mons",
+  "summary": "All the Mods 시리즈와 Cobblemon이 만난 환상의 조합. 기술·마법 자동화로 포켓몬을 키우고, 강력한 팀을 구성해 모든 모드를 함께 즐기세요.",
+  "description": "All the Mons(ATMons)는 인기 ATM 시리즈의 키친싱크 구조와 Cobblemon의 포켓몬 시스템을 결합한 독특한 모드팩입니다. 단순한 포켓몬 어드벤처가 아니라, Mekanism으로 포켓몬볼 자동 생산, Botania로 진화석 자동화, AE2로 포켓몬 보관 시스템 구축 등 기술/마법 모드와 포켓몬을 자유롭게 조합할 수 있습니다.\n\n포켓몬 트레이너가 되는 동시에, 거대한 자동화 공장을 운영하고, 마법으로 포켓몬을 강화하며, 던전을 탐험하는 멀티 플레이가 가능합니다.\n\nATM 시리즈와 Cobblemon 양쪽 팬 모두가 좋아할 만한 매우 독특하고 풍성한 경험을 제공합니다.",
+  "minecraftVersion": "1.21.1",
+  "loader": "NeoForge",
+  "tags": ["포켓몬", "키친싱크", "기술", "마법", "Cobblemon"],
+  "difficulty": "normal",
+  "playStyle": ["RPG", "기술", "수집", "자동화"],
+  "featured": true,
+  "coverImage": "/images/modpacks/atmons-cover.png",
+  "galleryImages": [],
+  "includedMods": ["cobblemon", "mekanism", "applied-energistics-2", "botania"],
+  "tips": [
+    {
+      "title": "두 갈래 진행",
+      "content": "포켓몬 진행과 기술/마법 진행을 동시에 할 수 있습니다. 처음에는 한쪽에 집중하다가 점차 두 시스템을 연결해보세요."
+    },
+    {
+      "title": "포켓몬볼 자동화",
+      "content": "사과(Apricorn) 농장을 만들고 자동 수확 → 자동 건조 → 자동 제작으로 몬스터볼을 무한 생산할 수 있습니다. 후반에는 거의 필수입니다."
+    },
+    {
+      "title": "AE2 + 포켓몬",
+      "content": "Applied Energistics 2의 ME 시스템에 포켓몬 관련 아이템을 보관하면 관리가 매우 편해집니다. 진화석, 포켓몬볼, 회복 아이템 모두 한 곳에서 관리하세요."
+    },
+    {
+      "title": "포켓몬으로 자원 수집",
+      "content": "특정 포켓몬은 자원 수집에 도움이 됩니다. 동굴 탐험, 채굴, 농사 등 각 상황에 맞는 포켓몬을 활용하세요."
+    }
+  ],
+  "faq": [
+    {
+      "question": "ATM10과 차이가 뭔가요?",
+      "answer": "ATM10에 Cobblemon 포켓몬 시스템이 통합되어 있다는 점이 가장 큰 차이입니다. ATM10의 모든 모드를 즐기면서 추가로 포켓몬 어드벤처도 함께 진행할 수 있습니다."
+    },
+    {
+      "question": "포켓몬에 관심이 없어도 즐길 수 있나요?",
+      "answer": "기술/마법 위주로 플레이해도 충분히 즐길 수 있습니다. 다만 모드팩 컨셉상 포켓몬 콘텐츠를 무시하면 일부 즐거움을 놓칠 수 있습니다."
+    },
+    {
+      "question": "성능이 어떤가요?",
+      "answer": "ATM10 + Cobblemon이라 모드 수가 많습니다. 최소 8GB 이상의 RAM을 권장합니다."
+    }
+  ],
+  "relatedModpacks": ["all-the-mods-10", "cobbleverse"]
+}

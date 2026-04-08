@@ -1,0 +1,47 @@
+---
+/**
+ * 태그 목록 컴포넌트 (필터 역할 가능)
+ */
+interface Props {
+  tags: string[];
+  baseUrl?: string;
+  activeTag?: string;
+}
+
+const { tags, baseUrl, activeTag } = Astro.props;
+---
+
+<div class="tag-list" role="list" aria-label="태그 필터">
+  {baseUrl && (
+    <a
+      href={baseUrl}
+      class:list={["mc-badge mc-badge--tag", { 'is-active': !activeTag }]}
+      role="listitem"
+    >
+      전체
+    </a>
+  )}
+  {tags.map(tag => (
+    <a
+      href={baseUrl ? `${baseUrl}?tag=${encodeURIComponent(tag)}` : '#'}
+      class:list={["mc-badge mc-badge--tag", { 'is-active': activeTag === tag }]}
+      role="listitem"
+    >
+      {tag}
+    </a>
+  ))}
+</div>
+
+<style>
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .is-active {
+    background: rgba(74, 237, 217, 0.3) !important;
+    border-color: var(--color-diamond) !important;
+    color: #fff !important;
+  }
+</style>

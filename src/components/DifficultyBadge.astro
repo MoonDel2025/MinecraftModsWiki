@@ -1,0 +1,17 @@
+---
+/**
+ * 난이도 배지 컴포넌트
+ */
+import { getDifficultyLabel } from '../utils/data';
+
+interface Props {
+  difficulty: string;
+}
+
+const { difficulty } = Astro.props;
+const label = getDifficultyLabel(difficulty);
+---
+
+<span class={`mc-badge mc-badge--difficulty-${difficulty}`}>
+  {label}
+</span>

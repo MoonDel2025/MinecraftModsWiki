@@ -1,0 +1,515 @@
+---
+/**
+ * 홈페이지 - 마인크래프트 영감 디자인
+ * 잔디 블록 히어로, 섹션별 블록 테마 배경, 인벤토리 슬롯 카테고리
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ModpackCard from '../components/ModpackCard.astro';
+import GuideCard from '../components/GuideCard.astro';
+import { getAllModpacks, getFeaturedModpacks, getAllGuides } from '../utils/data';
+
+const featuredModpacks = getFeaturedModpacks();
+const allModpacks = getAllModpacks();
+const recentGuides = getAllGuides().slice(0, 3);
+---
+
+<BaseLayout title="MC Mod Wiki" description="마인크래프트 모드팩과 모드 정보를 한눈에. 공략, 팁, 가이드를 정리한 한국어 위키.">
+
+  <!-- ==============================
+       히어로 - 잔디 블록 느낌
+       상단 잔디 → 하단 흙 그라데이션
+       ============================== -->
+  <section class="hero">
+    <!-- 배경 이미지 (블러 + 어둡게 처리) -->
+    <div class="hero__bg" aria-hidden="true">
+      <img src="/images/hero-bg.png" alt="" loading="eager" />
+    </div>
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="hero__grass-line" aria-hidden="true"></div>
+    <div class="hero__particles" aria-hidden="true">
+      <span class="hero__particle hero__particle--1"></span>
+      <span class="hero__particle hero__particle--2"></span>
+      <span class="hero__particle hero__particle--3"></span>
+    </div>
+    <div class="hero__inner container">
+      <div class="hero__content">
+        <p class="hero__label">⛏ 마인크래프트 모드 정보 위키</p>
+        <h1 class="hero__title">
+          모드팩의 모든 것,<br />
+          <span class="hero__title-accent">한 곳에서 찾아보세요</span>
+        </h1>
+        <p class="hero__desc">
+          인기 모드팩 소개부터 모드 설명, 초보자 가이드, 공략 팁까지.<br />
+          영어 위키를 뒤질 필요 없이, 여기서 빠르게 찾아보세요.
+        </p>
+        <div class="hero__actions">
+          <a href="/modpacks/" class="mc-btn mc-btn--primary">모드팩 둘러보기</a>
+          <a href="/guides/" class="mc-btn mc-btn--accent">초보자 가이드</a>
+        </div>
+      </div>
+
+      <!-- 검색 -->
+      <form action="/search/" method="get" class="hero__search" role="search">
+        <div class="hero__search-wrap">
+          <svg class="hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input
+            type="search"
+            name="q"
+            class="mc-search hero__search-input"
+            placeholder="모드팩, 모드, 가이드 검색..."
+            aria-label="통합 검색"
+          />
+          <span class="hero__search-hint">예: RLCraft, Mekanism, 초보자</span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ==============================
+       추천 모드팩 - 돌 배경
+       ============================== -->
+  <section class="section bg-stone">
+    <div class="container">
+      <h2 class="section-title">⭐ 추천 모드팩</h2>
+      <div class="card-grid">
+        {featuredModpacks.map(mp => (
+          <ModpackCard
+            slug={mp.slug}
+            name={mp.name}
+            summary={mp.summary}
+            minecraftVersion={mp.minecraftVersion}
+            loader={mp.loader}
+            difficulty={mp.difficulty}
+            tags={mp.tags}
+            featured={mp.featured}
+            coverImage={mp.coverImage}
+          />
+        ))}
+      </div>
+      <div class="section__more">
+        <a href="/modpacks/" class="mc-btn">전체 모드팩 보기 →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       카테고리 - 인벤토리 슬롯 느낌
+       ============================== -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">📂 카테고리</h2>
+      <div class="category-grid">
+        <a href="/modpacks/?tag=하드코어" class="category-slot">
+          <span class="category-slot__icon">💀</span>
+          <span class="category-slot__label">하드코어</span>
+          <span class="category-slot__glow category-slot__glow--red" aria-hidden="true"></span>
+        </a>
+        <a href="/modpacks/?tag=기술" class="category-slot">
+          <span class="category-slot__icon">⚙️</span>
+          <span class="category-slot__label">기술</span>
+          <span class="category-slot__glow category-slot__glow--iron" aria-hidden="true"></span>
+        </a>
+        <a href="/modpacks/?tag=마법" class="category-slot">
+          <span class="category-slot__icon">✨</span>
+          <span class="category-slot__label">마법</span>
+          <span class="category-slot__glow category-slot__glow--amethyst" aria-hidden="true"></span>
+        </a>
+        <a href="/modpacks/?tag=퀘스트" class="category-slot">
+          <span class="category-slot__icon">📜</span>
+          <span class="category-slot__label">퀘스트</span>
+          <span class="category-slot__glow category-slot__glow--gold" aria-hidden="true"></span>
+        </a>
+        <a href="/modpacks/?tag=모험" class="category-slot">
+          <span class="category-slot__icon">🗺️</span>
+          <span class="category-slot__label">모험</span>
+          <span class="category-slot__glow category-slot__glow--emerald" aria-hidden="true"></span>
+        </a>
+        <a href="/modpacks/?tag=키친싱크" class="category-slot">
+          <span class="category-slot__icon">🧰</span>
+          <span class="category-slot__label">키친싱크</span>
+          <span class="category-slot__glow category-slot__glow--diamond" aria-hidden="true"></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       가이드 - 나무 판자 배경
+       ============================== -->
+  <section class="section bg-wood">
+    <div class="container">
+      <h2 class="section-title">📖 가이드</h2>
+      <div class="guide-grid">
+        {recentGuides.map(guide => (
+          <GuideCard
+            slug={guide.slug}
+            title={guide.title}
+            summary={guide.summary}
+            category={guide.category}
+          />
+        ))}
+      </div>
+      <div class="section__more">
+        <a href="/guides/" class="mc-btn">모든 가이드 보기 →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       사이트 소개 - 툴팁 스타일
+       ============================== -->
+  <section class="section">
+    <div class="container">
+      <div class="about-tooltip mc-tooltip">
+        <p class="mc-tooltip__title">MC Mod Wiki</p>
+        <p class="mc-tooltip__desc">
+          마인크래프트 모드팩과 모드 정보를 정리한 한국어 정보 사이트입니다.
+          모드팩 선택부터 초반 공략까지, 필요한 정보를 찾아보세요.
+        </p>
+        <p class="mc-tooltip__desc">
+          영어 위키를 뒤지지 않아도, 여기서 빠르게 정보를 확인할 수 있습니다.
+        </p>
+        <p class="mc-tooltip__rare">비공식 팬 사이트</p>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ==============================
+     히어로 - 배경 이미지 + 블러 오버레이
+     ============================== */
+  .hero {
+    position: relative;
+    padding: var(--space-16) 0 var(--space-12);
+    overflow: hidden;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* 배경 이미지 - 블러 처리 */
+  .hero__bg {
+    position: absolute;
+    inset: -20px; /* 블러 가장자리 잘림 방지 */
+    z-index: 0;
+  }
+
+  .hero__bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    filter: blur(6px);
+    transform: scale(1.05); /* 블러 가장자리 보정 */
+  }
+
+  /* 어둡게 처리하는 오버레이 (다중 레이어) */
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      /* 중앙은 약간 덜 어둡게, 가장자리는 더 어둡게 (비네트 효과) */
+      radial-gradient(ellipse at center 40%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%),
+      /* 하단으로 갈수록 사이트 배경색으로 자연스럽게 전환 */
+      linear-gradient(180deg,
+        rgba(25,27,31,0.2) 0%,
+        rgba(25,27,31,0.3) 40%,
+        rgba(25,27,31,0.7) 75%,
+        rgba(25,27,31,1) 100%
+      );
+  }
+
+  /* 잔디 상단 라인 */
+  .hero__grass-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 3;
+    background: linear-gradient(90deg,
+      var(--color-grass-dark),
+      var(--color-grass),
+      var(--color-grass-light),
+      var(--color-grass),
+      var(--color-grass-dark)
+    );
+    opacity: 0.7;
+  }
+
+  /* 떠다니는 파티클 (광물 가루 느낌) */
+  .hero__particles {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .hero__particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 1px;
+    opacity: 0.4;
+  }
+
+  .hero__particle--1 {
+    background: var(--color-diamond);
+    top: 25%;
+    left: 12%;
+    box-shadow: 0 0 8px 2px var(--color-diamond);
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .hero__particle--2 {
+    background: var(--color-emerald);
+    top: 45%;
+    right: 15%;
+    box-shadow: 0 0 8px 2px var(--color-emerald);
+    animation: float 8s ease-in-out infinite 1s;
+  }
+
+  .hero__particle--3 {
+    background: var(--color-gold);
+    top: 65%;
+    left: 70%;
+    box-shadow: 0 0 8px 2px var(--color-gold);
+    animation: float 7s ease-in-out infinite 2s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.2; }
+    50% { transform: translateY(-12px) scale(1.3); opacity: 0.5; }
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+  }
+
+  .hero__label {
+    font-size: var(--font-size-sm);
+    color: var(--color-grass-light);
+    font-weight: 600;
+    margin-bottom: var(--space-4);
+    letter-spacing: 0.05em;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  }
+
+  .hero__title {
+    font-size: var(--font-size-4xl);
+    margin-bottom: var(--space-4);
+    line-height: 1.25;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+
+  .hero__title-accent {
+    background: linear-gradient(135deg, var(--color-diamond) 0%, var(--color-emerald) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+
+  .hero__desc {
+    font-size: var(--font-size-base);
+    color: #c8ccd4;
+    max-width: 520px;
+    margin: 0 auto var(--space-6);
+    line-height: 1.7;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-10);
+  }
+
+  .hero__search {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .hero__search-wrap {
+    position: relative;
+  }
+
+  .hero__search-icon {
+    position: absolute;
+    left: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .hero__search-input {
+    padding: 14px var(--space-4) 14px 44px;
+    font-size: var(--font-size-base);
+    background: rgba(0,0,0,0.45);
+    border-color: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+
+  .hero__search-input:focus {
+    background: rgba(0,0,0,0.6);
+    border-color: var(--color-diamond);
+  }
+
+  .hero__search-hint {
+    display: block;
+    margin-top: var(--space-2);
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+  }
+
+  /* ==============================
+     섹션 공통
+     ============================== */
+  .section {
+    padding: var(--space-12) 0;
+  }
+
+  .section__more {
+    text-align: center;
+    margin-top: var(--space-8);
+  }
+
+  /* ==============================
+     카드 그리드
+     ============================== */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  /* ==============================
+     카테고리 - 인벤토리 슬롯
+     ============================== */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .category-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-5) var(--space-4);
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    /* 인벤토리 슬롯 스타일 */
+    background: var(--slot-bg);
+    border: 2px solid #2A2A35;
+    border-radius: var(--radius-md);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.4),
+      inset 0 0 0 1px rgba(255,255,255,0.03),
+      inset 1px 1px 0 rgba(255,255,255,0.06);
+    transition: all var(--transition-normal);
+  }
+
+  .category-slot:hover {
+    border-color: #3A3A4A;
+    background: #1E2028;
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.3),
+      0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  .category-slot__icon {
+    font-size: 1.8rem;
+    z-index: 1;
+    transition: transform var(--transition-fast);
+  }
+
+  .category-slot:hover .category-slot__icon {
+    transform: scale(1.15);
+  }
+
+  .category-slot__label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    z-index: 1;
+    transition: color var(--transition-fast);
+  }
+
+  .category-slot:hover .category-slot__label {
+    color: var(--text-heading);
+  }
+
+  /* 슬롯 하단 글로우 효과 - 각 광물 색상 */
+  .category-slot__glow {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 20px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    filter: blur(10px);
+  }
+
+  .category-slot:hover .category-slot__glow { opacity: 0.5; }
+
+  .category-slot__glow--red { background: var(--color-redstone); }
+  .category-slot__glow--iron { background: var(--color-iron); }
+  .category-slot__glow--amethyst { background: var(--color-amethyst); }
+  .category-slot__glow--gold { background: var(--color-gold); }
+  .category-slot__glow--emerald { background: var(--color-emerald); }
+  .category-slot__glow--diamond { background: var(--color-diamond); }
+
+  /* ==============================
+     소개 - 툴팁 박스
+     ============================== */
+  .about-tooltip {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ==============================
+     반응형
+     ============================== */
+  @media (min-width: 640px) {
+    .card-grid { grid-template-columns: repeat(2, 1fr); }
+    .guide-grid { grid-template-columns: repeat(2, 1fr); }
+    .category-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .card-grid { grid-template-columns: repeat(3, 1fr); }
+    .guide-grid { grid-template-columns: repeat(3, 1fr); }
+    .category-grid { grid-template-columns: repeat(6, 1fr); }
+
+    .hero__title { font-size: var(--font-size-5xl); }
+  }
+</style>

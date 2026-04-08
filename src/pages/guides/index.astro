@@ -1,0 +1,95 @@
+---
+/**
+ * 가이드 목록 페이지
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import { getAllGuides } from '../../utils/data';
+
+const guides = getAllGuides();
+const categories = [...new Set(guides.map(g => g.category))].sort();
+
+const breadcrumbs = [
+  { label: '홈', href: '/' },
+  { label: '가이드' },
+];
+---
+
+<BaseLayout
+  title="가이드"
+  description="마인크래프트 모드팩 초보자 가이드, 성능 최적화 팁, 공략 정보를 확인하세요."
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section container">
+    <div class="page-header">
+      <h1 class="page-header__title">📖 가이드</h1>
+      <p class="page-header__desc">
+        모드팩 시작 가이드, 성능 최적화 팁, 공략 정보를 정리했습니다.
+      </p>
+    </div>
+
+    {categories.map(cat => {
+      const catGuides = guides.filter(g => g.category === cat);
+      return (
+        <div class="guide-category">
+          <h2 class="guide-category__title">{cat}</h2>
+          <div class="guide-grid">
+            {catGuides.map(guide => (
+              <GuideCard
+                slug={guide.slug}
+                title={guide.title}
+                summary={guide.summary}
+                category={guide.category}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    })}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .page-header__title {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-2);
+  }
+
+  .page-header__desc {
+    color: var(--text-secondary);
+  }
+
+  .guide-category {
+    margin-bottom: var(--space-8);
+  }
+
+  .guide-category__title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--border-color);
+    color: var(--text-heading);
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 640px) {
+    .guide-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .guide-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,285 @@
+---
+/**
+ * 사이트 헤더 - 마인크래프트 메뉴 바에서 영감
+ * 오크 나무 판자 텍스처 느낌의 상단 바
+ */
+---
+
+<header class="header">
+  <div class="header__inner container">
+    <!-- 로고 -->
+    <a href="/" class="header__logo" aria-label="MC Mod Wiki 홈">
+      <span class="header__logo-icon" aria-hidden="true">⛏</span>
+      <span class="header__logo-text">MC<span class="header__logo-accent">Mod</span>Wiki</span>
+    </a>
+
+    <!-- 데스크톱 네비게이션 -->
+    <nav class="header__nav" aria-label="주요 메뉴">
+      <a href="/modpacks/" class="header__link">
+        <span class="header__link-icon" aria-hidden="true">📦</span>
+        모드팩
+      </a>
+      <a href="/mods/" class="header__link">
+        <span class="header__link-icon" aria-hidden="true">🧩</span>
+        모드
+      </a>
+      <a href="/guides/" class="header__link">
+        <span class="header__link-icon" aria-hidden="true">📖</span>
+        가이드
+      </a>
+    </nav>
+
+    <!-- 검색 바 (데스크톱) -->
+    <div class="header__search">
+      <form action="/search/" method="get" role="search">
+        <div class="header__search-wrap">
+          <svg class="header__search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input
+            type="search"
+            name="q"
+            class="mc-search header__search-input"
+            placeholder="검색..."
+            aria-label="검색"
+          />
+        </div>
+      </form>
+    </div>
+
+    <!-- 모바일 메뉴 토글 -->
+    <button
+      class="header__burger"
+      aria-label="메뉴 열기"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- 모바일 메뉴 -->
+  <nav id="mobile-menu" class="header__mobile-menu" aria-label="모바일 메뉴" hidden>
+    <div class="header__mobile-inner">
+      <a href="/modpacks/" class="header__mobile-link">
+        <span aria-hidden="true">📦</span> 모드팩
+      </a>
+      <a href="/mods/" class="header__mobile-link">
+        <span aria-hidden="true">🧩</span> 모드
+      </a>
+      <a href="/guides/" class="header__mobile-link">
+        <span aria-hidden="true">📖</span> 가이드
+      </a>
+      <form action="/search/" method="get" class="header__mobile-search" role="search">
+        <input
+          type="search"
+          name="q"
+          class="mc-search"
+          placeholder="모드팩, 모드, 가이드 검색..."
+          aria-label="모바일 검색"
+        />
+      </form>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const burger = document.querySelector('.header__burger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  burger?.addEventListener('click', () => {
+    const isOpen = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!isOpen));
+    burger.classList.toggle('is-active');
+    mobileMenu?.toggleAttribute('hidden');
+  });
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-height);
+    /* 오크 나무 판자에서 영감받은 어두운 톤 */
+    background: linear-gradient(180deg, #1A1610 0%, #151210 100%);
+    border-bottom: 1px solid rgba(184,148,95,0.15);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    height: 100%;
+  }
+
+  /* 로고 */
+  .header__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 800;
+    font-size: var(--font-size-lg);
+    color: var(--text-heading);
+    text-decoration: none;
+    flex-shrink: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .header__logo:hover {
+    color: var(--color-gold);
+  }
+
+  .header__logo-icon {
+    font-size: 1.3rem;
+    filter: drop-shadow(0 0 4px rgba(252,219,5,0.3));
+  }
+
+  .header__logo-accent {
+    color: var(--color-grass-light);
+  }
+
+  .header__logo:hover .header__logo-accent {
+    color: var(--color-gold);
+  }
+
+  /* 네비게이션 */
+  .header__nav {
+    display: none;
+    gap: var(--space-1);
+  }
+
+  .header__link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    border: 1px solid transparent;
+  }
+
+  .header__link:hover {
+    color: var(--text-heading);
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.06);
+  }
+
+  .header__link-icon {
+    font-size: 0.9em;
+  }
+
+  /* 검색 */
+  .header__search {
+    display: none;
+    flex: 1;
+    max-width: 280px;
+    margin-left: auto;
+  }
+
+  .header__search-wrap {
+    position: relative;
+  }
+
+  .header__search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .header__search-input {
+    width: 100%;
+    padding: 6px 10px 6px 32px;
+    font-size: var(--font-size-sm);
+    border-width: 1px;
+    background: rgba(255,255,255,0.04);
+  }
+
+  /* 햄버거 */
+  .header__burger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--space-2);
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
+  .header__burger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--text-secondary);
+    border-radius: 1px;
+    transition: all var(--transition-fast);
+  }
+
+  .header__burger.is-active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .header__burger.is-active span:nth-child(2) { opacity: 0; }
+
+  .header__burger.is-active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  /* 모바일 메뉴 */
+  .header__mobile-menu {
+    background: linear-gradient(180deg, #151210 0%, #111 100%);
+    border-bottom: 1px solid rgba(184,148,95,0.1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+
+  .header__mobile-menu[hidden] { display: none; }
+
+  .header__mobile-inner {
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .header__mobile-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    color: var(--text-primary);
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    transition: background var(--transition-fast);
+  }
+
+  .header__mobile-link:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-heading);
+  }
+
+  .header__mobile-search {
+    padding: var(--space-2) 0;
+  }
+
+  .header__mobile-search .mc-search {
+    padding-left: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .header__nav { display: flex; }
+    .header__search { display: block; }
+    .header__burger { display: none; }
+    .header__mobile-menu { display: none !important; }
+  }
+</style>

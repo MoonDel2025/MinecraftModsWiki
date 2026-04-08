@@ -1,0 +1,10 @@
+{
+  "id": "performance-optimization",
+  "slug": "performance-optimization",
+  "title": "모드팩 성능 최적화 가이드",
+  "summary": "렉 없이 쾌적하게 모드팩을 플레이하기 위한 성능 최적화 팁 모음.",
+  "category": "최적화",
+  "body": "## JVM 인수 설정\n\n모드팩의 성능을 크게 좌우하는 것은 JVM(Java Virtual Machine) 설정입니다.\n\n### RAM 할당\n- **경량 모드팩** (모드 50개 이하): 4GB\n- **중형 모드팩** (모드 100~200개): 6~8GB\n- **대형 모드팩** (모드 200개 이상): 8~12GB\n\n> ⚠️ RAM을 너무 많이 할당하면 오히려 GC(Garbage Collection)로 인한 끊김이 발생할 수 있습니다.\n\n### 권장 JVM 인수\n```\n-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200\n-XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC\n-XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40\n-XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20\n```\n\n## 인게임 설정\n\n### 비디오 설정\n- **렌더 거리**: 8~12 청크 (16 이상은 비권장)\n- **시뮬레이션 거리**: 8 청크\n- **파티클**: 최소\n- **구름**: OFF\n- **엔티티 그림자**: OFF\n\n### 모드별 설정\n- **Dynamic Surroundings**: 날씨 효과 줄이기\n- **Better Foliage**: 나뭇잎 효과 끄기\n- **Particle Man**: 파티클 제한\n\n## 크래시 대응 기본\n\n1. `crash-report` 폴더에서 최신 리포트를 확인하세요\n2. 에러 메시지에서 어떤 모드가 문제인지 찾으세요\n3. 해당 모드의 config 파일에서 문제 기능을 비활성화하세요\n4. 해결되지 않으면 모드팩 디스코드/포럼에 문의하세요",
+  "relatedModpacks": ["rlcraft", "all-the-mods-10"],
+  "relatedMods": []
+}

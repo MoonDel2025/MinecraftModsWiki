@@ -1,0 +1,21 @@
+{
+  "id": "immersive-engineering",
+  "slug": "immersive-engineering",
+  "name": "Immersive Engineering",
+  "summary": "현실적인 산업 기계와 멀티블록 구조물을 추가하는 몰입감 높은 기술 모드.",
+  "description": "Immersive Engineering은 마인크래프트에 현실적인 산업 시대의 기계와 구조물을 추가하는 기술 모드입니다. 거대한 멀티블록 기계, 전선과 전봇대, 컨베이어 벨트, 방수포 등 시각적으로 매우 인상적인 구조물들이 특징입니다.\n\n다른 기술 모드와 달리 GUI보다는 실제 월드에서 보이는 구조물 중심으로 설계되어, 공장을 짓는 느낌이 강합니다.",
+  "category": "기술",
+  "tags": ["기술", "멀티블록", "산업", "전기", "자동화"],
+  "availableInModpacks": ["all-the-mods-10"],
+  "helpfulTips": [
+    "Engineer's Manual이 인게임 가이드북입니다. 꼭 만들어서 읽으세요.",
+    "멀티블록은 정확한 배치가 필요합니다. 가이드북의 3D 미리보기를 참고하세요.",
+    "전선 연결 시 Shift+우클릭으로 연결합니다.",
+    "물레방아(Waterwheel)가 초반 발전의 핵심입니다."
+  ],
+  "confusingPoints": [
+    "멀티블록 구조물 조립이 처음에는 어렵습니다. 가이드북의 그림을 정확히 따라하세요.",
+    "전선 종류에 따라 전송 가능한 전력량이 다릅니다."
+  ],
+  "relatedMods": ["mekanism", "applied-energistics-2"]
+}

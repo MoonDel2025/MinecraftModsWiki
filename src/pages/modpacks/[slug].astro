@@ -1,0 +1,544 @@
+---
+/**
+ * 모드팩 상세 페이지
+ * 동적 라우트: /modpacks/[slug]/
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ModCard from '../../components/ModCard.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import DifficultyBadge from '../../components/DifficultyBadge.astro';
+import LoaderBadge from '../../components/LoaderBadge.astro';
+import Callout from '../../components/Callout.astro';
+import {
+  getAllModpacks,
+  getModpackBySlug,
+  getRelatedMods,
+  getRelatedModpacks,
+  getGuidesForModpack,
+  getModsInModpack,
+} from '../../utils/data';
+
+// 정적 경로 생성
+export function getStaticPaths() {
+  const modpacks = getAllModpacks();
+  return modpacks.map(mp => ({
+    params: { slug: mp.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const modpack = getModpackBySlug(slug!);
+
+if (!modpack) {
+  return Astro.redirect('/404');
+}
+
+const includedMods = getModsInModpack(modpack.id);
+const relatedModpacks = getRelatedModpacks(modpack.relatedModpacks);
+const relatedGuides = getGuidesForModpack(modpack.id);
+
+const breadcrumbs = [
+  { label: '홈', href: '/' },
+  { label: '모드팩', href: '/modpacks/' },
+  { label: modpack.name },
+];
+---
+
+<BaseLayout
+  title={modpack.name}
+  description={modpack.summary}
+  breadcrumbs={breadcrumbs}
+>
+  <article class="modpack-detail container">
+    <!-- 헤더: 썸네일 + 정보 + 추천박스 -->
+    <header class="modpack-detail__header">
+      <div class="modpack-detail__cover">
+        {modpack.coverImage ? (
+          <>
+            <img class="modpack-detail__cover-blur" src={modpack.coverImage} alt="" aria-hidden="true" />
+            <img class="modpack-detail__cover-main" src={modpack.coverImage} alt={`${modpack.name} 커버`} />
+          </>
+        ) : (
+          <div class="modpack-detail__cover-placeholder">
+            <span>⛏</span>
+          </div>
+        )}
+      </div>
+
+      <div class="modpack-detail__info">
+        <h1>{modpack.name}</h1>
+        <p class="modpack-detail__summary">{modpack.summary}</p>
+
+        <div class="modpack-detail__badges">
+          <span class="mc-badge">MC {modpack.minecraftVersion}</span>
+          <LoaderBadge loader={modpack.loader} />
+          <DifficultyBadge difficulty={modpack.difficulty} />
+          {modpack.featured && <span class="mc-badge mc-badge--featured">★ 추천</span>}
+        </div>
+
+        <div class="modpack-detail__tags">
+          {modpack.tags.map(tag => (
+            <a href={`/modpacks/?tag=${encodeURIComponent(tag)}`} class="mc-badge mc-badge--tag">{tag}</a>
+          ))}
+        </div>
+      </div>
+
+      <!-- 이런 분에게 추천 - 우측 사이드 -->
+      <aside class="recommend-tooltip mc-tooltip">
+        <p class="mc-tooltip__title">🎯 이런 분에게 추천</p>
+        <ul class="recommend-tooltip__list">
+          {modpack.playStyle.map(style => (
+            <li>{style} 중심 플레이</li>
+          ))}
+        </ul>
+      </aside>
+    </header>
+
+    <!-- 목차 - 한 줄 인라인 칩 -->
+    <nav class="toc" aria-label="목차">
+      <span class="toc__label">📑 목차</span>
+      <ul class="toc__list">
+        <li><a href="#description">소개</a></li>
+        {modpack.tips.length > 0 && <li><a href="#tips">초반 진행 팁</a></li>}
+        {modpack.faq.length > 0 && <li><a href="#faq">자주 묻는 질문</a></li>}
+        {includedMods.length > 0 && <li><a href="#mods">포함 모드</a></li>}
+        {relatedGuides.length > 0 && <li><a href="#guides">관련 가이드</a></li>}
+        {relatedModpacks.length > 0 && <li><a href="#related">비슷한 모드팩</a></li>}
+      </ul>
+    </nav>
+
+    <!-- 소개 -->
+    <section id="description" class="detail-section">
+      <h2 class="section-title">📖 소개</h2>
+      <div class="detail-section__body">
+        {modpack.description.split('\n\n').map(para => (
+          <p>{para}</p>
+        ))}
+      </div>
+    </section>
+
+    <!-- 초반 진행 팁 -->
+    {modpack.tips.length > 0 && (
+      <section id="tips" class="detail-section">
+        <h2 class="section-title">💡 초반 진행 팁</h2>
+        <div class="tips-grid">
+          {modpack.tips.map((tip, i) => (
+            <div class="tip-card mc-card">
+              <div class="tip-card__number">{i + 1}</div>
+              <h4 class="tip-card__title">{tip.title}</h4>
+              <p class="tip-card__content">{tip.content}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 자주 묻는 질문 -->
+    {modpack.faq.length > 0 && (
+      <section id="faq" class="detail-section">
+        <h2 class="section-title">❓ 자주 묻는 질문</h2>
+        <div class="faq-list">
+          {modpack.faq.map(item => (
+            <details class="faq-item mc-card">
+              <summary class="faq-item__question">{item.question}</summary>
+              <p class="faq-item__answer">{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 포함 모드 -->
+    {includedMods.length > 0 && (
+      <section id="mods" class="detail-section">
+        <h2 class="section-title">🧩 포함 모드 ({includedMods.length}개)</h2>
+        <div class="mod-grid">
+          {includedMods.map(mod => (
+            <ModCard
+              slug={mod.slug}
+              name={mod.name}
+              summary={mod.summary}
+              category={mod.category}
+              tags={mod.tags}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 관련 가이드 -->
+    {relatedGuides.length > 0 && (
+      <section id="guides" class="detail-section">
+        <h2 class="section-title">📚 관련 가이드</h2>
+        <div class="guide-grid">
+          {relatedGuides.map(guide => (
+            <GuideCard
+              slug={guide.slug}
+              title={guide.title}
+              summary={guide.summary}
+              category={guide.category}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 비슷한 모드팩 -->
+    {relatedModpacks.length > 0 && (
+      <section id="related" class="detail-section">
+        <h2 class="section-title">🔗 비슷한 모드팩</h2>
+        <div class="related-grid">
+          {relatedModpacks.map(rmp => (
+            <a href={`/modpacks/${rmp.slug}/`} class="related-card mc-card">
+              <h4>{rmp.name}</h4>
+              <p>{rmp.summary}</p>
+              <div class="related-card__meta">
+                <span class="mc-badge">MC {rmp.minecraftVersion}</span>
+                <DifficultyBadge difficulty={rmp.difficulty} />
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .modpack-detail {
+    padding: var(--space-6) 0;
+  }
+
+  /* 헤더 - 썸네일 | 정보 | 추천박스 */
+  .modpack-detail__header {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-template-areas:
+      "cover info"
+      "recommend recommend";
+    align-items: start;
+    gap: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-6);
+  }
+
+  .modpack-detail__cover { grid-area: cover; }
+  .modpack-detail__info { grid-area: info; min-width: 0; }
+  .recommend-tooltip { grid-area: recommend; }
+
+  @media (min-width: 900px) {
+    .modpack-detail__header {
+      grid-template-columns: 100px minmax(0, 1fr) 240px;
+      grid-template-areas: "cover info recommend";
+      gap: var(--space-5);
+    }
+  }
+
+  .modpack-detail__cover {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #14181F;
+    /* 인벤토리 슬롯 음각 */
+    border: 2px solid #1A1A1A;
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.5),
+      inset 1px 1px 0 rgba(255,255,255,0.04),
+      inset -1px -1px 0 rgba(0,0,0,0.3);
+  }
+
+  .modpack-detail__cover-main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  /* 블러 배경 제거 - 사용 안 함 */
+  .modpack-detail__cover-blur { display: none; }
+
+  .modpack-detail__cover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(255,255,255,0.025) 19px, rgba(255,255,255,0.025) 20px),
+      repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(255,255,255,0.025) 19px, rgba(255,255,255,0.025) 20px),
+      linear-gradient(135deg, #1A1F28 0%, #14181F 100%);
+    opacity: 0.4;
+  }
+
+  .modpack-detail__info h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .modpack-detail__summary {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+  }
+
+  .modpack-detail__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .modpack-detail__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  /* 추천 툴팁 - 헤더 우측 사이드 */
+  .recommend-tooltip__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .recommend-tooltip__list li {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    padding-left: var(--space-3);
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .recommend-tooltip__list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--color-amethyst);
+    font-size: 0.8em;
+  }
+
+  /* 목차 - 한 줄 인라인 칩 */
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+    padding: var(--space-3) var(--space-4);
+    background: rgba(184,148,95,0.04);
+    border: 1px solid rgba(184,148,95,0.12);
+    border-left: 3px solid var(--color-oak-plank);
+    border-radius: var(--radius-md);
+  }
+
+  .toc__label {
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    color: var(--color-oak-plank);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    padding-right: var(--space-2);
+    border-right: 1px solid rgba(184,148,95,0.15);
+    margin-right: var(--space-1);
+  }
+
+  .toc__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc__list a {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    text-decoration: none;
+  }
+
+  .toc__list a:hover {
+    color: var(--color-gold);
+    background: rgba(252,219,5,0.08);
+    border-color: rgba(252,219,5,0.25);
+  }
+
+  /* 섹션 */
+  .detail-section {
+    margin-bottom: var(--space-10);
+  }
+
+  .detail-section__body p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--space-4);
+  }
+
+  /* 팁 그리드 */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .tip-card {
+    padding: var(--space-4) var(--space-5);
+    position: relative;
+    border-left: 3px solid var(--color-emerald);
+  }
+
+  .tip-card__number {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-4);
+    width: 26px;
+    height: 26px;
+    background: rgba(23,221,98,0.1);
+    color: var(--color-emerald);
+    border: 1px solid rgba(23,221,98,0.2);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+  }
+
+  .tip-card__title {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-2);
+    padding-right: var(--space-8);
+  }
+
+  .tip-card__content {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* FAQ */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .faq-item {
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .faq-item__question {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-heading);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .faq-item__question::before {
+    content: '▶';
+    font-size: 0.7em;
+    transition: transform var(--transition-fast);
+    color: var(--text-muted);
+  }
+
+  .faq-item[open] .faq-item__question::before {
+    transform: rotate(90deg);
+  }
+
+  .faq-item__answer {
+    margin-top: var(--space-3);
+    padding-left: var(--space-5);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* 모드 그리드 */
+  .mod-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  /* 관련 모드팩 */
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .related-card {
+    padding: var(--space-4) var(--space-5);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .related-card h4 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-2);
+  }
+
+  .related-card:hover h4 {
+    color: var(--text-link);
+  }
+
+  .related-card p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--space-3);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .related-card__meta {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  /* 반응형 */
+  @media (min-width: 768px) {
+    .tips-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mod-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .guide-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+</style>

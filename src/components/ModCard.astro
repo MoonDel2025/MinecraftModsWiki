@@ -1,0 +1,109 @@
+---
+/**
+ * 모드 카드 - 인벤토리 슬롯 느낌
+ */
+interface Props {
+  slug: string;
+  name: string;
+  summary: string;
+  category: string;
+  tags: string[];
+}
+
+const { slug, name, summary, category, tags } = Astro.props;
+---
+
+<a href={`/mods/${slug}/`} class="mod-card">
+  <div class="mod-card__body">
+    <div class="mod-card__header">
+      <h3 class="mod-card__title">{name}</h3>
+      <span class="mc-badge">{category}</span>
+    </div>
+    <p class="mod-card__summary">{summary}</p>
+    <div class="mod-card__tags">
+      {tags.slice(0, 4).map(tag => (
+        <span class="mc-badge mc-badge--tag">{tag}</span>
+      ))}
+    </div>
+  </div>
+  <div class="mod-card__glow" aria-hidden="true"></div>
+</a>
+
+<style>
+  .mod-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: var(--space-4);
+    position: relative;
+
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: all var(--transition-normal);
+  }
+
+  .mod-card__glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(74,237,217,0.12), transparent 50%) border-box;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+  }
+
+  .mod-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-color-light);
+  }
+
+  .mod-card:hover .mod-card__glow { opacity: 1; }
+
+  .mod-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .mod-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .mod-card__title {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--text-heading);
+    transition: color var(--transition-fast);
+  }
+
+  .mod-card:hover .mod-card__title { color: var(--text-link); }
+
+  .mod-card__summary {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .mod-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: var(--space-1);
+  }
+</style>

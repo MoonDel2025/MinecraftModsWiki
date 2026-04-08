@@ -1,0 +1,104 @@
+---
+/**
+ * 404 페이지 - 마인크래프트 감성
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="페이지를 찾을 수 없습니다" description="요청하신 페이지가 존재하지 않습니다.">
+  <section class="not-found">
+    <div class="not-found__inner container">
+      <div class="not-found__icon" aria-hidden="true">🕳️</div>
+      <h1 class="not-found__title">404</h1>
+      <p class="not-found__subtitle">이 청크는 아직 로드되지 않았습니다</p>
+      <p class="not-found__desc">
+        찾으시는 페이지가 엔더맨에게 옮겨졌거나, 크리퍼에 의해 폭파되었을 수 있습니다.
+      </p>
+      <div class="not-found__actions">
+        <a href="/" class="mc-btn mc-btn--primary">홈으로 돌아가기</a>
+        <a href="/modpacks/" class="mc-btn">모드팩 둘러보기</a>
+      </div>
+      <div class="not-found__hint">
+        <p>혹시 아래 페이지를 찾고 계신가요?</p>
+        <ul>
+          <li><a href="/modpacks/">📦 모드팩 목록</a></li>
+          <li><a href="/mods/">🧩 모드 목록</a></li>
+          <li><a href="/guides/">📖 가이드</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding: var(--space-16) 0;
+    text-align: center;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .not-found__inner {
+    width: 100%;
+  }
+
+  .not-found__icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .not-found__title {
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--text-heading);
+    line-height: 1;
+    margin-bottom: var(--space-3);
+    background: linear-gradient(135deg, var(--color-diamond), var(--color-end-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .not-found__subtitle {
+    font-size: var(--font-size-xl);
+    color: var(--text-heading);
+    margin-bottom: var(--space-3);
+    font-weight: 600;
+  }
+
+  .not-found__desc {
+    color: var(--text-muted);
+    margin-bottom: var(--space-8);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .not-found__actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    margin-bottom: var(--space-10);
+  }
+
+  .not-found__hint {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .not-found__hint p {
+    margin-bottom: var(--space-3);
+  }
+
+  .not-found__hint ul {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .not-found__hint a {
+    color: var(--text-secondary);
+  }
+</style>

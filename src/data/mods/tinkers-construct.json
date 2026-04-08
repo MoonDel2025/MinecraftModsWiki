@@ -1,0 +1,21 @@
+{
+  "id": "tinkers-construct",
+  "slug": "tinkers-construct",
+  "name": "Tinkers' Construct",
+  "summary": "나만의 커스텀 도구와 무기를 제작하는 모드. 재료별 특성 조합으로 무한한 가능성.",
+  "description": "Tinkers' Construct는 마인크래프트의 도구 제작 시스템을 완전히 재설계하는 모드입니다. 기존의 조합대 방식 대신, Smeltery(용광로)에서 금속을 녹이고 주형에 부어 부품을 만든 뒤, Tool Station에서 조립하는 방식으로 도구를 제작합니다.\n\n각 재료마다 고유한 특성이 있어, 어떤 재료를 조합하느냐에 따라 도구의 성능과 효과가 달라집니다. 도구는 사용하면서 레벨업하고, 수정(Modifier)을 추가하여 더 강하게 만들 수 있습니다.",
+  "category": "도구",
+  "tags": ["도구", "무기", "커스텀", "용광로", "제작"],
+  "availableInModpacks": ["all-the-mods-10"],
+  "helpfulTips": [
+    "Smeltery 건설이 첫 번째 목표입니다. Seared Brick을 만들어 시작하세요.",
+    "JEI에서 재료별 특성을 확인하고, 원하는 조합을 미리 계획하세요.",
+    "도구가 부서지지 않고 '사용 불가' 상태가 됩니다. 수리할 수 있으니 당황하지 마세요.",
+    "Modifier 슬롯이 제한되어 있으므로, 어떤 수정을 넣을지 신중하게 선택하세요."
+  ],
+  "confusingPoints": [
+    "Smeltery에 용암을 넣어야 작동합니다.",
+    "바닐라 도구 조합법이 비활성화될 수 있습니다 (모드팩 설정에 따라 다름)."
+  ],
+  "relatedMods": ["mekanism", "botania"]
+}

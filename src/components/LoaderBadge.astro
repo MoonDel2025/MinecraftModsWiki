@@ -1,0 +1,15 @@
+---
+/**
+ * 모드 로더 배지 (Forge, Fabric, NeoForge, Quilt)
+ */
+interface Props {
+  loader: string;
+}
+
+const { loader } = Astro.props;
+const loaderClass = loader.toLowerCase().replace(/\s+/g, '');
+---
+
+<span class={`mc-badge mc-badge--${loaderClass}`}>
+  {loader}
+</span>

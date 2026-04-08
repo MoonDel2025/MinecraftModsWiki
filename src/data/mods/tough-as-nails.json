@@ -1,0 +1,19 @@
+{
+  "id": "tough-as-nails",
+  "slug": "tough-as-nails",
+  "name": "Tough As Nails",
+  "summary": "갈증과 체온 시스템을 추가하여 서바이벌의 현실감을 높이는 모드.",
+  "description": "Tough As Nails는 마인크래프트에 갈증(Thirst)과 체온(Temperature) 시스템을 추가합니다. 물을 마시지 않으면 탈수 효과가 걸리고, 체온이 너무 높거나 낮으면 디버프가 걸립니다. 정수된 깨끗한 물을 마시는 것이 중요하며, 바이옴과 장비에 따라 체온이 변합니다.",
+  "category": "서바이벌",
+  "tags": ["서바이벌", "갈증", "체온", "하드코어"],
+  "availableInModpacks": ["rlcraft", "deceasedcraft"],
+  "helpfulTips": [
+    "빗물을 모으거나 물병을 화로에 넣어 정수하세요.",
+    "울(Wool) 방어구는 추운 지역에서 체온을 유지하는 데 도움됩니다.",
+    "사막이나 네더에서는 냉각 코일이나 시원한 음료가 필요합니다."
+  ],
+  "confusingPoints": [
+    "더러운 물을 마시면 배탈 효과가 걸립니다. 항상 정수된 물을 마시세요."
+  ],
+  "relatedMods": ["lycanites-mobs"]
+}

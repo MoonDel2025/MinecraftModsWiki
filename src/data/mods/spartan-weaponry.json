@@ -1,0 +1,16 @@
+{
+  "id": "spartan-weaponry",
+  "slug": "spartan-weaponry",
+  "name": "Spartan Weaponry",
+  "summary": "다양한 종류의 근접/원거리 무기를 추가하는 무기 확장 모드.",
+  "description": "Spartan Weaponry는 마인크래프트에 창, 할버드, 파이크, 랜스, 전투도끼, 메이스, 부메랑, 석궁 등 다양한 무기를 추가합니다. 각 무기마다 고유한 특성과 전투 스타일이 있어 상황에 따라 적절한 무기를 선택할 수 있습니다.",
+  "category": "무기",
+  "tags": ["무기", "전투", "장비"],
+  "availableInModpacks": ["rlcraft"],
+  "helpfulTips": [
+    "무기마다 사거리와 공격 속도가 다릅니다. 상황에 맞는 무기를 사용하세요.",
+    "창(Spear)은 던질 수 있어 원거리 공격이 가능합니다."
+  ],
+  "confusingPoints": [],
+  "relatedMods": ["ice-and-fire", "lycanites-mobs"]
+}

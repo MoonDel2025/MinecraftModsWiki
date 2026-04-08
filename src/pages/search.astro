@@ -1,0 +1,237 @@
+---
+/**
+ * 검색 결과 페이지
+ * URL: /search/?q=검색어
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ModpackCard from '../components/ModpackCard.astro';
+import ModCard from '../components/ModCard.astro';
+import GuideCard from '../components/GuideCard.astro';
+import { getAllModpacks, getAllMods, getAllGuides } from '../utils/data';
+
+const query = Astro.url.searchParams.get('q')?.trim() || '';
+const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+
+// 서버 사이드 검색 (빌드 타임에 모든 조합을 만들 수 없으므로 SSR 모드 또는 클라이언트 필터 사용)
+// 정적 사이트이므로 클라이언트 JS에서 필터링합니다.
+
+const allModpacks = getAllModpacks();
+const allMods = getAllMods();
+const allGuides = getAllGuides();
+
+function matchSearch(searchText: string): boolean {
+  if (terms.length === 0) return false;
+  const lower = searchText.toLowerCase();
+  return terms.every(term => lower.includes(term));
+}
+
+const matchedModpacks = allModpacks.filter(mp =>
+  matchSearch([mp.name, mp.summary, ...mp.tags].join(' '))
+);
+const matchedMods = allMods.filter(m =>
+  matchSearch([m.name, m.summary, ...m.tags, m.category].join(' '))
+);
+const matchedGuides = allGuides.filter(g =>
+  matchSearch([g.title, g.summary, g.category].join(' '))
+);
+const totalResults = matchedModpacks.length + matchedMods.length + matchedGuides.length;
+
+const breadcrumbs = [
+  { label: '홈', href: '/' },
+  { label: '검색 결과' },
+];
+---
+
+<BaseLayout
+  title={query ? `"${query}" 검색 결과` : '검색'}
+  description={`"${query}" 검색 결과 - MC Mod Wiki`}
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section container">
+    <!-- 검색 바 -->
+    <div class="search-page__bar">
+      <form action="/search/" method="get" role="search">
+        <div class="search-page__wrap">
+          <svg class="search-page__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.3-4.3"/>
+          </svg>
+          <input
+            type="search"
+            name="q"
+            value={query}
+            class="mc-search search-page__input"
+            placeholder="모드팩, 모드, 가이드 검색..."
+            aria-label="검색"
+            autofocus
+          />
+        </div>
+      </form>
+    </div>
+
+    {query && (
+      <p class="search-page__info">
+        "<strong>{query}</strong>" 검색 결과: {totalResults}건
+      </p>
+    )}
+
+    {!query && (
+      <div class="search-page__empty">
+        <p>검색어를 입력하세요.</p>
+      </div>
+    )}
+
+    {/* 모드팩 결과 */}
+    {matchedModpacks.length > 0 && (
+      <div class="search-section">
+        <h2 class="search-section__title">📦 모드팩 ({matchedModpacks.length})</h2>
+        <div class="card-grid">
+          {matchedModpacks.map(mp => (
+            <ModpackCard
+              slug={mp.slug}
+              name={mp.name}
+              summary={mp.summary}
+              minecraftVersion={mp.minecraftVersion}
+              loader={mp.loader}
+              difficulty={mp.difficulty}
+              tags={mp.tags}
+              coverImage={mp.coverImage}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* 모드 결과 */}
+    {matchedMods.length > 0 && (
+      <div class="search-section">
+        <h2 class="search-section__title">🧩 모드 ({matchedMods.length})</h2>
+        <div class="card-grid card-grid--mods">
+          {matchedMods.map(mod => (
+            <ModCard
+              slug={mod.slug}
+              name={mod.name}
+              summary={mod.summary}
+              category={mod.category}
+              tags={mod.tags}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* 가이드 결과 */}
+    {matchedGuides.length > 0 && (
+      <div class="search-section">
+        <h2 class="search-section__title">📖 가이드 ({matchedGuides.length})</h2>
+        <div class="card-grid card-grid--guides">
+          {matchedGuides.map(guide => (
+            <GuideCard
+              slug={guide.slug}
+              title={guide.title}
+              summary={guide.summary}
+              category={guide.category}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+
+    {query && totalResults === 0 && (
+      <div class="search-page__no-results">
+        <p class="search-page__no-results-text">검색 결과가 없습니다.</p>
+        <p class="search-page__no-results-hint">다른 키워드로 검색해보세요.</p>
+        <div class="search-page__suggestions">
+          <a href="/modpacks/" class="mc-btn">모드팩 둘러보기</a>
+          <a href="/mods/" class="mc-btn">모드 둘러보기</a>
+        </div>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .search-page__bar {
+    margin-bottom: var(--space-6);
+  }
+
+  .search-page__wrap {
+    position: relative;
+    max-width: 600px;
+  }
+
+  .search-page__icon {
+    position: absolute;
+    left: var(--space-4);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .search-page__input {
+    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-12);
+    font-size: var(--font-size-lg);
+  }
+
+  .search-page__info {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-6);
+  }
+
+  .search-section {
+    margin-bottom: var(--space-8);
+  }
+
+  .search-section__title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .search-page__empty,
+  .search-page__no-results {
+    text-align: center;
+    padding: var(--space-12);
+    color: var(--text-muted);
+  }
+
+  .search-page__no-results-text {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-2);
+  }
+
+  .search-page__no-results-hint {
+    margin-bottom: var(--space-6);
+  }
+
+  .search-page__suggestions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+  }
+
+  @media (min-width: 640px) {
+    .card-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .card-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card-grid--mods,
+    .card-grid--guides {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

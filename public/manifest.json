@@ -1,0 +1,16 @@
+{
+  "name": "MC Mod Wiki",
+  "short_name": "MC Wiki",
+  "description": "마인크래프트 모드팩/모드 정보 위키",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}

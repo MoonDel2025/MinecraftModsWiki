@@ -1,0 +1,19 @@
+{
+  "id": "reskillable",
+  "slug": "reskillable",
+  "name": "Reskillable",
+  "summary": "RPG식 스킬 레벨 시스템을 추가하여 도구와 장비 사용에 레벨 조건을 부여하는 모드.",
+  "description": "Reskillable은 마인크래프트에 RPG 스타일의 스킬 시스템을 추가합니다. 채굴, 전투, 농업, 건축 등의 스킬이 있으며, 각 스킬 레벨에 따라 사용할 수 있는 도구와 장비가 제한됩니다. 경험치를 사용하여 스킬을 레벨업할 수 있습니다.",
+  "category": "RPG",
+  "tags": ["RPG", "스킬", "레벨", "진행형"],
+  "availableInModpacks": ["rlcraft"],
+  "helpfulTips": [
+    "L 키로 스킬 화면을 열 수 있습니다.",
+    "경험치를 모아 가장 필요한 스킬부터 올리세요.",
+    "다이아몬드 도구를 사용하려면 해당 스킬이 높아야 합니다."
+  ],
+  "confusingPoints": [
+    "왜 도구가 사용되지 않는지 이해하기 어려울 수 있습니다. 아이템에 마우스를 올리면 필요 스킬 레벨이 표시됩니다."
+  ],
+  "relatedMods": ["lycanites-mobs", "spartan-weaponry"]
+}

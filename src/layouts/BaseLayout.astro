@@ -1,0 +1,147 @@
+---
+/**
+ * 기본 레이아웃 - 모든 페이지의 공통 구조
+ * SEO 메타태그, 헤더, 푸터를 포함합니다.
+ */
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  breadcrumbs?: { label: string; href?: string }[];
+}
+
+const {
+  title,
+  description = '마인크래프트 모드팩과 모드 정보를 한눈에. 공략, 가이드, 팁을 정리한 위키 사이트.',
+  ogImage = '/images/og-default.png',
+  breadcrumbs,
+} = Astro.props;
+
+const siteTitle = 'MC Mod Wiki';
+const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#1a1a2e" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:url" content={canonicalUrl.href} />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:site_name" content={siteTitle} />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <link rel="canonical" href={canonicalUrl.href} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- 폰트: Pretendard (한국어 최적 시스템 폰트 대체) -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+  />
+
+  <title>{fullTitle}</title>
+
+  {/* 구조화 데이터 - Breadcrumb */}
+  {breadcrumbs && breadcrumbs.length > 0 && (
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": breadcrumbs.map((bc, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": bc.label,
+        ...(bc.href ? { "item": new URL(bc.href, Astro.site).href } : {}),
+      })),
+    })} />
+  )}
+</head>
+<body>
+  <Header />
+
+  {breadcrumbs && breadcrumbs.length > 0 && (
+    <nav class="breadcrumb container" aria-label="breadcrumb">
+      <ol>
+        {breadcrumbs.map((bc, i) => (
+          <li>
+            {bc.href && i < breadcrumbs.length - 1 ? (
+              <a href={bc.href}>{bc.label}</a>
+            ) : (
+              <span aria-current={i === breadcrumbs.length - 1 ? 'page' : undefined}>{bc.label}</span>
+            )}
+            {i < breadcrumbs.length - 1 && <span class="breadcrumb__sep" aria-hidden="true">›</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )}
+
+  <main>
+    <slot />
+  </main>
+
+  <Footer />
+</body>
+</html>
+
+<style>
+  main {
+    min-height: calc(100vh - var(--header-height) - 200px);
+  }
+
+  .breadcrumb {
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .breadcrumb li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+  }
+
+  .breadcrumb a {
+    color: var(--text-secondary);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--text-link);
+  }
+
+  .breadcrumb__sep {
+    color: var(--text-muted);
+    margin: 0 var(--space-1);
+  }
+
+  .breadcrumb span[aria-current="page"] {
+    color: var(--text-primary);
+  }
+</style>

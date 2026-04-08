@@ -1,0 +1,36 @@
+---
+/**
+ * 팁/경고/주의 박스 컴포넌트
+ * type: tip | warning | danger | info
+ */
+interface Props {
+  type: 'tip' | 'warning' | 'danger' | 'info';
+  title?: string;
+}
+
+const { type, title } = Astro.props;
+
+const defaultTitles: Record<string, string> = {
+  tip: '💡 팁',
+  warning: '⚠️ 주의',
+  danger: '🚫 경고',
+  info: 'ℹ️ 참고',
+};
+
+const displayTitle = title || defaultTitles[type];
+---
+
+<div class={`mc-callout mc-callout--${type}`} role={type === 'danger' ? 'alert' : 'note'}>
+  <p class="mc-callout__title">{displayTitle}</p>
+  <div class="mc-callout__body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .mc-callout__body {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+</style>

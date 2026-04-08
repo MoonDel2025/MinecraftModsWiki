@@ -1,0 +1,196 @@
+---
+/**
+ * 가이드 상세 페이지
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ModpackCard from '../../components/ModpackCard.astro';
+import { getAllGuides, getGuideBySlug, getRelatedModpacks } from '../../utils/data';
+
+export function getStaticPaths() {
+  const guides = getAllGuides();
+  return guides.map(g => ({ params: { slug: g.slug } }));
+}
+
+const { slug } = Astro.params;
+const guide = getGuideBySlug(slug!);
+
+if (!guide) {
+  return Astro.redirect('/404');
+}
+
+const relatedModpacks = getRelatedModpacks(guide.relatedModpacks);
+
+const breadcrumbs = [
+  { label: '홈', href: '/' },
+  { label: '가이드', href: '/guides/' },
+  { label: guide.title },
+];
+
+// 간단한 마크다운 파서 (## 헤더, **볼드**, \n\n 단락, ``` 코드블록, > 인용, - 리스트)
+function parseSimpleMarkdown(text: string): string {
+  let html = text
+    // 코드 블록
+    .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+    // 헤더
+    .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+    .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+    // 볼드
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // 인용
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    // 리스트 아이템
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+    // 인라인 코드
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    // 단락
+    .replace(/\n\n/g, '</p><p>');
+
+  return `<p>${html}</p>`;
+}
+
+const bodyHtml = parseSimpleMarkdown(guide.body);
+---
+
+<BaseLayout
+  title={guide.title}
+  description={guide.summary}
+  breadcrumbs={breadcrumbs}
+>
+  <article class="guide-detail container">
+    <header class="guide-detail__header">
+      <span class="mc-badge mc-badge--tag">{guide.category}</span>
+      <h1>{guide.title}</h1>
+      <p class="guide-detail__summary">{guide.summary}</p>
+    </header>
+
+    <div class="guide-detail__body prose" set:html={bodyHtml} />
+
+    {relatedModpacks.length > 0 && (
+      <section class="detail-section">
+        <h2 class="section-title">📦 관련 모드팩</h2>
+        <div class="modpack-grid">
+          {relatedModpacks.map(mp => (
+            <ModpackCard
+              slug={mp.slug}
+              name={mp.name}
+              summary={mp.summary}
+              minecraftVersion={mp.minecraftVersion}
+              loader={mp.loader}
+              difficulty={mp.difficulty}
+              tags={mp.tags}
+              coverImage={mp.coverImage}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .guide-detail {
+    padding: var(--space-6) 0;
+    max-width: 800px;
+  }
+
+  .guide-detail__header {
+    margin-bottom: var(--space-8);
+  }
+
+  .guide-detail__header h1 {
+    font-size: var(--font-size-3xl);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .guide-detail__summary {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* 본문 프로즈 스타일 */
+  .prose {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: var(--font-size-base);
+  }
+
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4) {
+    color: var(--text-heading);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-3);
+  }
+
+  .prose :global(h3) {
+    font-size: var(--font-size-xl);
+  }
+
+  .prose :global(h4) {
+    font-size: var(--font-size-lg);
+  }
+
+  .prose :global(p) {
+    margin-bottom: var(--space-4);
+  }
+
+  .prose :global(strong) {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .prose :global(code) {
+    background: var(--bg-card);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .prose :global(pre) {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    overflow-x: auto;
+    margin: var(--space-4) 0;
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    padding: 0;
+    font-size: var(--font-size-sm);
+  }
+
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--color-gold);
+    padding-left: var(--space-4);
+    color: var(--text-muted);
+    font-style: italic;
+    margin: var(--space-4) 0;
+  }
+
+  .prose :global(li) {
+    margin-bottom: var(--space-1);
+    padding-left: var(--space-2);
+  }
+
+  .detail-section {
+    margin-top: var(--space-10);
+  }
+
+  .modpack-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .modpack-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

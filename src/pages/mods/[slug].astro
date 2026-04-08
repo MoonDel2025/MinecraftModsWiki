@@ -1,0 +1,210 @@
+---
+/**
+ * 모드 상세 페이지
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ModpackCard from '../../components/ModpackCard.astro';
+import ModCard from '../../components/ModCard.astro';
+import Callout from '../../components/Callout.astro';
+import {
+  getAllMods,
+  getModBySlug,
+  getModpacksWithMod,
+  getRelatedMods,
+} from '../../utils/data';
+
+export function getStaticPaths() {
+  const mods = getAllMods();
+  return mods.map(m => ({ params: { slug: m.slug } }));
+}
+
+const { slug } = Astro.params;
+const mod = getModBySlug(slug!);
+
+if (!mod) {
+  return Astro.redirect('/404');
+}
+
+const modpacks = getModpacksWithMod(mod.id);
+const relatedMods = getRelatedMods(mod.relatedMods);
+
+const breadcrumbs = [
+  { label: '홈', href: '/' },
+  { label: '모드', href: '/mods/' },
+  { label: mod.name },
+];
+---
+
+<BaseLayout
+  title={mod.name}
+  description={mod.summary}
+  breadcrumbs={breadcrumbs}
+>
+  <article class="mod-detail container">
+    <!-- 헤더 -->
+    <header class="mod-detail__header">
+      <h1>{mod.name}</h1>
+      <p class="mod-detail__summary">{mod.summary}</p>
+      <div class="mod-detail__meta">
+        <span class="mc-badge">{mod.category}</span>
+        {mod.tags.map(tag => (
+          <a href={`/mods/?tag=${encodeURIComponent(tag)}`} class="mc-badge mc-badge--tag">{tag}</a>
+        ))}
+      </div>
+    </header>
+
+    <!-- 이 모드가 포함된 모드팩 -->
+    {modpacks.length > 0 && (
+      <section class="detail-section">
+        <h2 class="section-title">📦 이 모드가 포함된 모드팩</h2>
+        <div class="modpack-grid">
+          {modpacks.map(mp => (
+            <ModpackCard
+              slug={mp.slug}
+              name={mp.name}
+              summary={mp.summary}
+              minecraftVersion={mp.minecraftVersion}
+              loader={mp.loader}
+              difficulty={mp.difficulty}
+              tags={mp.tags}
+              coverImage={mp.coverImage}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- 설명 -->
+    <section class="detail-section">
+      <h2 class="section-title">📖 소개</h2>
+      <div class="detail-section__body">
+        {mod.description.split('\n\n').map(para => (
+          <p>{para}</p>
+        ))}
+      </div>
+    </section>
+
+    <!-- 플레이 팁 -->
+    {mod.helpfulTips.length > 0 && (
+      <section class="detail-section">
+        <h2 class="section-title">💡 플레이 팁</h2>
+        <ul class="tip-list">
+          {mod.helpfulTips.map(tip => (
+            <li class="tip-list__item mc-card">{tip}</li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <!-- 헷갈리는 부분 -->
+    {mod.confusingPoints.length > 0 && (
+      <section class="detail-section">
+        <Callout type="warning" title="⚠️ 자주 헷갈리는 부분">
+          <ul>
+            {mod.confusingPoints.map(point => (
+              <li>• {point}</li>
+            ))}
+          </ul>
+        </Callout>
+      </section>
+    )}
+
+    <!-- 비슷한 모드 -->
+    {relatedMods.length > 0 && (
+      <section class="detail-section">
+        <h2 class="section-title">🔗 관련 모드</h2>
+        <div class="related-grid">
+          {relatedMods.map(rm => (
+            <ModCard
+              slug={rm.slug}
+              name={rm.name}
+              summary={rm.summary}
+              category={rm.category}
+              tags={rm.tags}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .mod-detail {
+    padding: var(--space-6) 0;
+  }
+
+  .mod-detail__header {
+    margin-bottom: var(--space-8);
+  }
+
+  .mod-detail__header h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .mod-detail__summary {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+  }
+
+  .mod-detail__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .detail-section {
+    margin-bottom: var(--space-10);
+  }
+
+  .detail-section__body p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--space-4);
+  }
+
+  .tip-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .tip-list__item {
+    padding: var(--space-4);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    border-left: 3px solid var(--color-emerald);
+  }
+
+  .modpack-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 640px) {
+    .modpack-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .modpack-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

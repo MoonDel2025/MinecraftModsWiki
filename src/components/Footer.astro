@@ -1,0 +1,144 @@
+---
+/**
+ * 사이트 푸터 - 기반암(Bedrock) 층 느낌
+ */
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__bedrock" aria-hidden="true"></div>
+  <div class="footer__inner container">
+    <div class="footer__grid">
+      <!-- 사이트 정보 -->
+      <div class="footer__section">
+        <h3 class="footer__title">
+          <span class="footer__title-icon" aria-hidden="true">⛏</span>
+          MC Mod Wiki
+        </h3>
+        <p class="footer__desc">
+          마인크래프트 모드팩과 모드 정보를 정리한 한국어 위키 사이트입니다.
+          모드팩 선택부터 초반 공략까지, 필요한 정보를 찾아보세요.
+        </p>
+      </div>
+
+      <!-- 빠른 링크 -->
+      <div class="footer__section">
+        <h4 class="footer__subtitle">바로가기</h4>
+        <nav aria-label="푸터 링크">
+          <ul class="footer__links">
+            <li><a href="/modpacks/"><span aria-hidden="true">📦</span> 모드팩 목록</a></li>
+            <li><a href="/mods/"><span aria-hidden="true">🧩</span> 모드 목록</a></li>
+            <li><a href="/guides/"><span aria-hidden="true">📖</span> 가이드</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- 참고 -->
+      <div class="footer__section">
+        <h4 class="footer__subtitle">참고</h4>
+        <p class="footer__desc">
+          이 사이트는 비공식 팬 사이트이며, Mojang Studios 또는 Microsoft와 관련이 없습니다.
+          Minecraft는 Mojang Studios의 상표입니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>&copy; {currentYear} MC Mod Wiki. 모든 모드의 저작권은 각 제작자에게 있습니다.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--space-16);
+    position: relative;
+    /* 기반암 층 느낌 */
+    background: linear-gradient(180deg, #0C0D0F 0%, #080909 100%);
+    border-top: 1px solid var(--border-color);
+    padding: var(--space-12) 0 var(--space-6);
+  }
+
+  /* 기반암 상단 텍스처 라인 */
+  .footer__bedrock {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background:
+      repeating-linear-gradient(90deg,
+        var(--border-color) 0px,
+        var(--border-color) 8px,
+        transparent 8px,
+        transparent 12px,
+        rgba(74,237,217,0.15) 12px,
+        rgba(74,237,217,0.15) 14px,
+        transparent 14px,
+        transparent 20px
+      );
+    opacity: 0.4;
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .footer__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-lg);
+    color: var(--text-heading);
+    margin-bottom: var(--space-3);
+  }
+
+  .footer__subtitle {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  .footer__desc {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .footer__links a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__links a:hover { color: var(--text-link); }
+
+  .footer__bottom {
+    margin-top: var(--space-8);
+    padding-top: var(--space-4);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 768px) {
+    .footer__grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+</style>

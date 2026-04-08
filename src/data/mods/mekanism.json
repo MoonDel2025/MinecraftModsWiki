@@ -1,0 +1,21 @@
+{
+  "id": "mekanism",
+  "slug": "mekanism",
+  "name": "Mekanism",
+  "summary": "5배 광석 처리부터 핵융합 발전까지, 마인크래프트 최고의 기술 모드.",
+  "description": "Mekanism은 마인크래프트에서 가장 인기 있는 기술 모드 중 하나입니다. 광석을 최대 5배까지 처리할 수 있는 시스템, 디지털 채광기, 파이프라인, 발전기, 화학 처리 시스템, 제트팩, 그리고 핵융합 발전소까지 방대한 콘텐츠를 제공합니다.\n\n초반에는 광석 2배 처리(Enrichment Chamber)부터 시작하여, 점차 복잡하고 효율적인 시스템을 구축해 나갈 수 있습니다. 잘 설계된 진행 구조 덕분에 기술 모드 입문자에게도 추천합니다.",
+  "category": "기술",
+  "tags": ["기술", "자동화", "에너지", "광석처리", "기계"],
+  "availableInModpacks": ["all-the-mods-10", "all-the-mons"],
+  "helpfulTips": [
+    "Enrichment Chamber부터 시작하세요. 광석 2배 처리의 기본입니다.",
+    "Universal Cable은 에너지를, Mechanical Pipe는 액체를, Logistical Transporter는 아이템을 운반합니다.",
+    "디지털 채광기(Digital Miner)는 특정 광석만 채굴할 수 있어 매우 효율적입니다.",
+    "Mekasuit는 게임 내 최강 방어구 중 하나입니다."
+  ],
+  "confusingPoints": [
+    "에너지 단위 FE/J/RF가 혼동될 수 있지만, Mekanism에서는 자동 변환됩니다.",
+    "가스(Gas) 시스템은 액체와 비슷하지만 별도의 파이프를 사용합니다."
+  ],
+  "relatedMods": ["applied-energistics-2", "immersive-engineering"]
+}
