@@ -6,7 +6,7 @@
   "description": "MrCrayfish's Gun Mod는 마인크래프트에 권총, 라이플, 산탄총, 저격총 등 다양한 현대식 총기를 추가합니다. 각 총기는 고유한 발사음, 반동, 정확도, 데미지를 가지며, 스코프, 손잡이, 총열 등의 부착물을 장착해 커스터마이징할 수 있습니다.\n\n좀비 아포칼립스 모드팩이나 PvP 서버에서 자주 사용됩니다. 탄약 시스템이 현실적이라 무한 사격은 불가능합니다.",
   "category": "무기",
   "tags": ["총기", "무기", "전투", "PvP", "현대"],
-  "availableInModpacks": ["deceasedcraft"],
+  "availableInModpacks": ["deceasedcraft", "cursed-walking"],
   "helpfulTips": [
     "각 총기는 전용 탄약을 사용합니다. 탄약 종류를 잘 확인하세요.",
     "스코프를 장착하면 우클릭으로 정조준할 수 있습니다.",

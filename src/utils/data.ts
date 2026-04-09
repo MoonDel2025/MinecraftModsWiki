@@ -52,10 +52,41 @@ export interface Guide {
 
 // --- 데이터 로더 ---
 
-/** 모든 모드팩 JSON 파일을 로드합니다 */
+/**
+ * 모드팩 표시 순서 (사이트 전반에서 사용)
+ * 새 모드팩을 추가하면 원하는 위치에 id를 넣어주세요.
+ * 여기에 없는 id는 자동으로 목록 끝에 알파벳순으로 추가됩니다.
+ */
+const MODPACK_ORDER: string[] = [
+  'all-the-mods-10',
+  'cobbleverse',
+  'deceasedcraft',
+  'better-mc-bmc4',
+  'all-the-mons',
+  'rlcraft',
+  'prominence-2-hasturian-era',
+  'cursed-walking',
+  'nightfallcraft-casket-of-reveries',
+  'atm10-sky',
+  'ftb-stoneblock-4',
+];
+
+/** 모든 모드팩 JSON 파일을 로드합니다 (MODPACK_ORDER 순서) */
 export function getAllModpacks(): Modpack[] {
   const files = import.meta.glob<Modpack>('../data/modpacks/*.json', { eager: true, import: 'default' });
-  return Object.values(files).sort((a, b) => a.name.localeCompare(b.name));
+  const all = Object.values(files);
+
+  return all.sort((a, b) => {
+    const ai = MODPACK_ORDER.indexOf(a.id);
+    const bi = MODPACK_ORDER.indexOf(b.id);
+    // 둘 다 ORDER에 있으면 ORDER 순서대로
+    if (ai !== -1 && bi !== -1) return ai - bi;
+    // ORDER에 있는 게 항상 먼저
+    if (ai !== -1) return -1;
+    if (bi !== -1) return 1;
+    // 둘 다 ORDER에 없으면 알파벳순
+    return a.name.localeCompare(b.name);
+  });
 }
 
 /** 모든 모드 JSON 파일을 로드합니다 */

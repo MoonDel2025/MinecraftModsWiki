@@ -6,7 +6,7 @@
   "description": "Applied Energistics 2(AE2)는 마인크래프트의 아이템 관리와 자동화를 혁신적으로 바꾸는 기술 모드입니다. 아이템을 디지털 데이터로 변환하여 저장하고, 네트워크를 통해 어디서든 접근할 수 있는 ME 시스템을 제공합니다.\n\n자동 크래프팅 시스템을 구축하면, 복잡한 조합법도 버튼 하나로 자동 제작할 수 있습니다. 모드팩 중후반의 핵심 인프라로, 거의 모든 기술 모드팩에서 필수적입니다.",
   "category": "기술",
   "tags": ["기술", "저장", "자동화", "네트워크", "크래프팅"],
-  "availableInModpacks": ["all-the-mods-10", "all-the-mons"],
+  "availableInModpacks": ["all-the-mods-10", "all-the-mons", "atm10-sky", "ftb-stoneblock-4"],
   "helpfulTips": [
     "운석(Meteorite) 찾기가 첫 번째 단계입니다. 운석 나침반을 만들어 사용하세요.",
     "채널(Channel) 시스템을 이해해야 합니다. 케이블 하나에 8채널까지 사용 가능합니다.",

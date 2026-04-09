@@ -1,0 +1,49 @@
+{
+  "id": "nightfallcraft-casket-of-reveries",
+  "slug": "nightfallcraft-casket-of-reveries",
+  "name": "NightfallCraft - The Casket of Reveries",
+  "summary": "Souls-like 전투 시스템 기반의 RPG 모드팩. 손수 제작된 허브, 보스 전투, 카타클리즘 차원, Epic Fight 시스템이 결합된 작품.",
+  "description": "NightfallCraft - The Casket of Reveries는 P1nero가 제작한 Souls-like RPG 모드팩입니다. 110만 이상의 다운로드를 기록한 작품으로, 독특한 스토리와 퀘스트 라인이 특징입니다.\n\n플레이어는 'Watcher'의 안내를 받는 구원자로서, 다양한 보스를 처치하고 잃어버린 'Spark'를 회수하여 제단을 밝힙니다. 최종 목표는 'Wraithon'에게 도전하여 세계를 구하는 것입니다.\n\n핵심 전투 시스템은 Epic Fight 모드를 기반으로 하며, 전용 애드온과 커스텀 보스가 포함되어 있습니다. 손수 제작된 중앙 허브, 독특한 바이옴, 던전, Cataclysm 영감의 차원들이 풍부한 탐험 거리를 제공합니다. 버전 2.0.11부터는 성능 향상을 위한 Journey Map 버전도 제공됩니다.",
+  "minecraftVersion": "1.20.1",
+  "loader": "Forge",
+  "tags": ["Soulslike", "RPG", "보스", "전투", "스토리"],
+  "difficulty": "expert",
+  "playStyle": ["RPG", "전투", "보스 사냥", "탐험"],
+  "featured": false,
+  "coverImage": "/images/modpacks/nightfallcraft-cover.png",
+  "galleryImages": [],
+  "includedMods": [],
+  "tips": [
+    {
+      "title": "Epic Fight 익히기",
+      "content": "기본 마인크래프트 전투와 완전히 다릅니다. 콤보, 회피, 패링 등을 익혀야 보스 전투에서 살아남을 수 있습니다. 초반에 약한 몹으로 연습하세요."
+    },
+    {
+      "title": "허브 활용",
+      "content": "중앙 허브에서 NPC와 대화하고 정보를 얻으세요. 다양한 차원으로 이동하는 포탈도 허브에 위치합니다."
+    },
+    {
+      "title": "Spark 수집",
+      "content": "보스를 처치하면 Spark를 얻을 수 있습니다. 제단에 바쳐 진행을 잠금 해제하세요. 어떤 순서로 도전할지 신중하게 결정하세요."
+    },
+    {
+      "title": "장비 업그레이드",
+      "content": "Soulslike답게 장비 강화가 중요합니다. 자원을 모아 무기/방어구를 꾸준히 업그레이드하세요."
+    }
+  ],
+  "faq": [
+    {
+      "question": "Souls 게임을 안 해본 사람도 즐길 수 있나요?",
+      "answer": "초반 학습 곡선이 가파르지만, 패턴을 익히면 충분히 즐길 수 있습니다. 죽음을 두려워하지 말고 보스 패턴을 학습한다는 마음가짐으로 도전하세요."
+    },
+    {
+      "question": "멀티플레이가 가능한가요?",
+      "answer": "기술적으로는 가능하지만, Epic Fight 시스템과 보스 디자인이 솔로 플레이에 최적화되어 있어 솔로를 권장합니다."
+    },
+    {
+      "question": "Journey Map 버전과 일반 버전 차이는?",
+      "answer": "Journey Map 버전은 성능이 더 좋습니다. Xaero Map의 기능이 필요 없다면 Journey Map 버전을 추천합니다."
+    }
+  ],
+  "relatedModpacks": ["prominence-2-hasturian-era", "rlcraft"]
+}

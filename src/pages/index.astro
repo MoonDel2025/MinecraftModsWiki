@@ -6,10 +6,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ModpackCard from '../components/ModpackCard.astro';
 import GuideCard from '../components/GuideCard.astro';
-import { getAllModpacks, getFeaturedModpacks, getAllGuides } from '../utils/data';
+import { getFeaturedModpacks, getAllGuides } from '../utils/data';
 
 const featuredModpacks = getFeaturedModpacks();
-const allModpacks = getAllModpacks();
 const recentGuides = getAllGuides().slice(0, 3);
 ---
 
@@ -506,7 +505,7 @@ const recentGuides = getAllGuides().slice(0, 3);
   }
 
   @media (min-width: 1024px) {
-    .card-grid { grid-template-columns: repeat(3, 1fr); }
+    .card-grid { grid-template-columns: repeat(2, 1fr); }
     .guide-grid { grid-template-columns: repeat(3, 1fr); }
     .category-grid { grid-template-columns: repeat(6, 1fr); }
 

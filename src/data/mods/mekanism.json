@@ -6,7 +6,7 @@
   "description": "Mekanism은 마인크래프트에서 가장 인기 있는 기술 모드 중 하나입니다. 광석을 최대 5배까지 처리할 수 있는 시스템, 디지털 채광기, 파이프라인, 발전기, 화학 처리 시스템, 제트팩, 그리고 핵융합 발전소까지 방대한 콘텐츠를 제공합니다.\n\n초반에는 광석 2배 처리(Enrichment Chamber)부터 시작하여, 점차 복잡하고 효율적인 시스템을 구축해 나갈 수 있습니다. 잘 설계된 진행 구조 덕분에 기술 모드 입문자에게도 추천합니다.",
   "category": "기술",
   "tags": ["기술", "자동화", "에너지", "광석처리", "기계"],
-  "availableInModpacks": ["all-the-mods-10", "all-the-mons"],
+  "availableInModpacks": ["all-the-mods-10", "all-the-mons", "atm10-sky", "ftb-stoneblock-4"],
   "helpfulTips": [
     "Enrichment Chamber부터 시작하세요. 광석 2배 처리의 기본입니다.",
     "Universal Cable은 에너지를, Mechanical Pipe는 액체를, Logistical Transporter는 아이템을 운반합니다.",

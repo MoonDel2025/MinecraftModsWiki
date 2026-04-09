@@ -1,0 +1,49 @@
+{
+  "id": "atm10-sky",
+  "slug": "atm10-sky",
+  "name": "All the Mods 10: To the Sky (ATM10SKY)",
+  "summary": "ATM10의 방대한 모드를 스카이블록 진행 챌린지로 변환한 모드팩. 나무 한 그루에서 시작해 기술과 마법으로 무한한 가능성을 만들어가세요.",
+  "description": "All the Mods 10: To the Sky(ATM10SKY)는 인기 ATM10의 스카이블록 버전입니다. 1.21 NeoForge 기반으로, 방대한 ATM10의 모드를 진행 기반 스카이블록 챌린지로 재구성했습니다.\n\n나무 한 그루만 있는 작은 섬에서 시작해, 자원을 창의적으로 모으고 효율적으로 자동화하여 후반 콘텐츠에 도달해야 합니다. 240만 이상의 다운로드를 기록한 검증된 인기작입니다.\n\n기술, 마법, 탐험, 건축 등 모든 장르의 모드가 엄선되어 포함되어 있으며, FTB Quests 시스템으로 가이드 진행이 제공됩니다. 퀘스트가 진행되면서 레시피가 잠금 해제되고, JEI와 통합되어 다음 단계를 명확하게 안내해줍니다.\n\n최소 6~8GB RAM 할당이 권장됩니다.",
+  "minecraftVersion": "1.21.1",
+  "loader": "NeoForge",
+  "tags": ["스카이블록", "키친싱크", "기술", "마법", "퀘스트"],
+  "difficulty": "normal",
+  "playStyle": ["스카이블록", "자동화", "기술", "퀘스트"],
+  "featured": true,
+  "coverImage": "/images/modpacks/atm10-sky-cover.png",
+  "galleryImages": [],
+  "includedMods": ["mekanism", "applied-energistics-2", "botania", "tinkers-construct"],
+  "tips": [
+    {
+      "title": "퀘스트북이 가이드",
+      "content": "ATM10 Sky는 FTB Quests로 진행이 안내됩니다. 막힐 때마다 퀘스트북을 확인하면 다음 단계와 필요한 재료가 명확하게 보입니다."
+    },
+    {
+      "title": "Sieve부터 시작",
+      "content": "스카이블록의 기본은 Ex Nihilo 스타일의 Sieve(체)입니다. 자갈과 모래에서 광물을 얻는 시스템이 핵심이니 빠르게 자동화하세요."
+    },
+    {
+      "title": "공간 효율 활용",
+      "content": "스카이블록이라 공간이 제한적입니다. Mekanism의 디지털 채광기 같은 압축 시스템보다는 소형 자동화 라인으로 시작하세요."
+    },
+    {
+      "title": "안전 난간 필수",
+      "content": "공중 공간에서의 추락사가 잦습니다. 작업 중인 영역 주변에 항상 안전 난간이나 셰이프가드를 설치하세요."
+    }
+  ],
+  "faq": [
+    {
+      "question": "ATM10과 무엇이 다른가요?",
+      "answer": "ATM10이 일반 오버월드 키친싱크 모드팩이라면, ATM10 Sky는 같은 모드들을 스카이블록 챌린지 형태로 재구성한 버전입니다. 진행 순서가 더 명확하고 자동화 의존도가 더 높습니다."
+    },
+    {
+      "question": "RAM은 얼마나 필요한가요?",
+      "answer": "최소 6GB, 권장 8GB입니다. 후반에 자동화 시설이 많아지면 10GB까지 늘려야 할 수도 있습니다."
+    },
+    {
+      "question": "초보자도 할 수 있나요?",
+      "answer": "퀘스트북이 친절하게 안내해주므로 모드팩 입문자도 도전할 수 있습니다. 다만 자동화의 기본 개념(파이프, 호퍼, 인서터)은 미리 익혀두면 좋습니다."
+    }
+  ],
+  "relatedModpacks": ["all-the-mods-10", "ftb-stoneblock-4"]
+}

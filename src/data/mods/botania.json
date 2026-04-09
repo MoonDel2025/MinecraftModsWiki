@@ -6,7 +6,7 @@
   "description": "Botania는 '자연의 마법'을 테마로 한 모드입니다. 겉보기에는 마법 모드처럼 보이지만, 실제로는 레드스톤과 자동화를 핵심으로 한 기술 모드에 가깝습니다.\n\n마나(Mana)를 생성하는 꽃, 마나로 작동하는 기능성 꽃, 마나를 저장하고 전송하는 시스템을 구축하며 진행합니다. Lexica Botania(인게임 가이드북)가 매우 잘 만들어져 있어, 모드 내에서 모든 정보를 확인할 수 있습니다.\n\n최종 목표는 가이아 가디언 보스를 처치하고 강력한 장비와 도구를 제작하는 것입니다.",
   "category": "마법",
   "tags": ["마법", "자동화", "자연", "보스", "장비"],
-  "availableInModpacks": ["all-the-mods-10", "all-the-mons"],
+  "availableInModpacks": ["all-the-mods-10", "all-the-mons", "atm10-sky"],
   "helpfulTips": [
     "Lexica Botania를 꼭 읽으세요. 이 모드의 모든 정보가 담겨 있습니다.",
     "Endoflame(석탄 태우는 꽃)이 초반 마나 생성의 핵심입니다.",
