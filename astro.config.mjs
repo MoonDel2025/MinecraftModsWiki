@@ -4,9 +4,9 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // GitHub Pages 프로젝트 사이트 URL
-  site: 'https://moondel2025.github.io',
-  base: '/MinecraftModsWiki/',
+  // 커스텀 도메인 (루트로 서빙)
+  site: 'https://minecraftmodwiki.com',
+  base: '/',
   trailingSlash: 'always',
   integrations: [sitemap()],
   build: {
