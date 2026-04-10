@@ -35,6 +35,10 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <meta name="theme-color" content="#1a1a2e" />
+  <!-- 검색엔진 차단 (Google, Bing, Naver 등) -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="googlebot" content="noindex, nofollow" />
+  <meta name="bingbot" content="noindex, nofollow" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
