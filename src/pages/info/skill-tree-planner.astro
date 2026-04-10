@@ -1,12 +1,14 @@
 ---
 /**
- * Cisco's RPG 스킬 트리 찍어보기 (시뮬레이터)
- * - SVG로 노드/연결선 그리기
- * - 클라이언트 사이드 JS로 인터랙션
- * - localStorage에 빌드 저장
+ * Cisco's RPG / Passive Skill Tree 시뮬레이터 (실제 데이터 기반)
+ * - 5개 클래스 (Alchemist / Blacksmith / Cook / Enchanter / Hunter)
+ * - 각 클래스 61개 노드, 총 305개
+ * - 클래스 탭 전환 + Pan / Zoom + 빌드 저장
+ *
+ * 데이터 출처: Daripher의 Passive Skill Tree mod (GitHub)
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { SKILL_NODES, NODE_COSTS, TOTAL_POINTS, CLASS_COLORS } from '../../data/skill-tree';
+import { REAL_SKILLS, CLASS_INFO, COORD_BOUNDS } from '../../data/skill-tree-real';
 
 const base = import.meta.env.BASE_URL;
 const breadcrumbs = [
@@ -15,64 +17,72 @@ const breadcrumbs = [
   { label: '스킬 트리 찍어보기' },
 ];
 
-// 모든 연결선 (양방향 중복 제거)
-const links = new Set<string>();
-SKILL_NODES.forEach(node => {
-  node.links.forEach(targetId => {
-    const key = [node.id, targetId].sort().join('|');
-    links.add(key);
-  });
-});
-const linkPairs = Array.from(links).map(k => k.split('|') as [string, string]);
+// 클래스별로 노드 그룹화
+const byClass: Record<string, typeof REAL_SKILLS> = {};
+for (const node of REAL_SKILLS) {
+  if (!byClass[node.classKey]) byClass[node.classKey] = [];
+  byClass[node.classKey].push(node);
+}
+const classKeys = Object.keys(CLASS_INFO) as Array<keyof typeof CLASS_INFO>;
 
-// 노드 좌표를 JSON으로 직렬화하여 클라이언트로 전달
-const nodesJson = JSON.stringify(
-  SKILL_NODES.map(n => ({
-    id: n.id,
-    name: n.name,
-    desc: n.desc,
-    type: n.type,
-    classKey: n.classKey,
-    links: n.links,
-    isStart: n.isStart || false,
-  }))
-);
-const costsJson = JSON.stringify(NODE_COSTS);
-const colorsJson = JSON.stringify(CLASS_COLORS);
+// 데이터를 클라이언트로 전달
+const dataJson = JSON.stringify({
+  skills: REAL_SKILLS,
+  classes: CLASS_INFO,
+  bounds: COORD_BOUNDS,
+});
 ---
 
 <BaseLayout
-  title="Cisco's RPG 스킬 트리 찍어보기"
-  description="Cisco's Fantasy Medieval RPG의 Passive Skill Tree를 직접 클릭해서 빌드를 시뮬레이션해보세요. 6개 클래스, 핵심 노드, 키스톤 효과를 미리 체험할 수 있습니다."
+  title="스킬 트리 찍어보기 | Cisco RPG"
+  description="Cisco's Fantasy Medieval RPG의 Passive Skill Tree 시뮬레이터. 5개 클래스(연금술사·대장장이·요리사·인챈터·사냥꾼) 305개 실제 노드를 직접 클릭해서 빌드를 시뮬레이션해보세요."
   breadcrumbs={breadcrumbs}
 >
   <article class="planner container">
     <header class="planner__header">
-      <span class="mc-badge mc-badge--tag">시뮬레이터</span>
-      <h1>🌳 Cisco's RPG 스킬 트리 찍어보기</h1>
+      <span class="mc-badge mc-badge--tag">시뮬레이터 · 실제 데이터</span>
+      <h1>🌳 Passive Skill Tree 찍어보기</h1>
       <p class="planner__lead">
-        실제 모드의 588개 노드를 단순화한 시뮬레이터입니다.
-        6개 클래스의 핵심 노드를 직접 찍어보면서 빌드를 미리 체험할 수 있습니다.
+        <strong>Daripher의 Passive Skill Tree</strong> 모드의 실제 305개 노드 데이터를 사용한 시뮬레이터입니다.
+        Cisco's RPG와 같은 모드팩에서 사용되는 시스템을 그대로 체험할 수 있습니다.
       </p>
     </header>
+
+    <!-- 클래스 탭 -->
+    <div class="planner__tabs" role="tablist" aria-label="클래스 선택">
+      {classKeys.map((key, idx) => (
+        <button
+          type="button"
+          role="tab"
+          class:list={["planner__tab", { 'is-active': idx === 0 }]}
+          data-class={key}
+          aria-selected={idx === 0 ? 'true' : 'false'}
+          style={`--tab-color:${CLASS_INFO[key].color}`}
+        >
+          <span class="planner__tab-emoji">{CLASS_INFO[key].emoji}</span>
+          <span class="planner__tab-name">{CLASS_INFO[key].nameKo}</span>
+          <span class="planner__tab-en">{CLASS_INFO[key].name}</span>
+        </button>
+      ))}
+    </div>
 
     <!-- 컨트롤 바 -->
     <div class="planner__controls mc-card">
       <div class="planner__points">
         <div class="planner__points-item">
-          <span class="planner__points-label">사용 포인트</span>
-          <span class="planner__points-value" id="points-used">0</span>
-          <span class="planner__points-sep">/</span>
-          <span class="planner__points-total">{TOTAL_POINTS}</span>
-        </div>
-        <div class="planner__points-item">
           <span class="planner__points-label">활성 노드</span>
           <span class="planner__points-value" id="nodes-count">0</span>
         </div>
+        <div class="planner__points-item">
+          <span class="planner__points-label">현재 클래스</span>
+          <span class="planner__points-value" id="active-class-label" style="font-size: 1rem;">연금술사</span>
+        </div>
       </div>
       <div class="planner__buttons">
-        <button type="button" id="btn-reset" class="mc-btn">🔄 리셋</button>
-        <button type="button" id="btn-save" class="mc-btn mc-btn--accent">💾 빌드 저장</button>
+        <button type="button" id="btn-fit" class="mc-btn">⊕ 화면에 맞춤</button>
+        <button type="button" id="btn-reset-class" class="mc-btn">🔄 이 클래스 리셋</button>
+        <button type="button" id="btn-reset-all" class="mc-btn">⚠ 전체 리셋</button>
+        <button type="button" id="btn-save" class="mc-btn mc-btn--accent">💾 저장</button>
       </div>
     </div>
 
@@ -80,406 +90,561 @@ const colorsJson = JSON.stringify(CLASS_COLORS);
     <details class="planner__how">
       <summary>📖 사용법 보기</summary>
       <ul>
-        <li><strong>중앙 CORE</strong>는 항상 활성화되어 있습니다. 여기서 시작하세요.</li>
-        <li>활성화된 노드에 <strong>인접한 노드</strong>만 클릭해서 활성화할 수 있습니다.</li>
-        <li>노드 위에 마우스를 올리면 효과 설명이 표시됩니다.</li>
-        <li>활성 노드를 다시 클릭하면 비활성화됩니다 (단, 다른 노드와 연결이 끊어지면 안 됨).</li>
-        <li>리셋 버튼으로 처음부터 다시 시작할 수 있습니다.</li>
+        <li><strong>클래스 탭</strong>을 클릭해서 5개 직업 트리 사이를 전환합니다. 각 클래스는 별도로 빌드를 짤 수 있습니다.</li>
+        <li>중앙의 <strong>큰 시작 노드</strong>(★)는 항상 활성화되어 있습니다. 여기서 시작합니다.</li>
+        <li>활성 노드와 <strong>인접한 노드</strong>만 클릭해서 활성화할 수 있습니다.</li>
+        <li>활성 노드를 다시 클릭하면 비활성화 (단, 다른 노드 연결이 끊어지면 안 됨)</li>
+        <li>마우스 휠로 <strong>줌 인/아웃</strong>, 드래그로 <strong>이동</strong>할 수 있습니다.</li>
+        <li><strong>💾 저장</strong>은 모든 클래스의 활성화 상태를 저장합니다.</li>
       </ul>
       <div class="planner__legend">
-        <span class="legend-item"><span class="legend-dot legend-dot--minor"></span> Minor (1 포인트)</span>
-        <span class="legend-item"><span class="legend-dot legend-dot--notable"></span> Notable (2 포인트)</span>
-        <span class="legend-item"><span class="legend-dot legend-dot--keystone"></span> Keystone (3 포인트)</span>
+        <span class="legend-item"><span class="legend-dot legend-dot--minor"></span> Minor 노드 (작은 보너스)</span>
+        <span class="legend-item"><span class="legend-dot legend-dot--notable"></span> Notable 노드 (큰 보너스)</span>
+        <span class="legend-item"><span class="legend-dot legend-dot--keystone"></span> Keystone 노드 (고유 효과)</span>
       </div>
     </details>
 
-    <!-- 스킬 트리 SVG -->
+    <!-- 트리 컨테이너 -->
     <div class="planner__svg-wrap">
       <svg
         id="skill-tree"
-        viewBox="0 0 1000 1000"
         xmlns="http://www.w3.org/2000/svg"
         role="img"
-        aria-label="Cisco RPG 스킬 트리"
+        aria-label="Passive Skill Tree"
+        viewBox="-200 -200 400 400"
       >
-        <!-- 배경 그라데이션 -->
         <defs>
-          <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#1A1F28" stop-opacity="0.6" />
-            <stop offset="100%" stop-color="#0C0D0F" stop-opacity="0.9" />
+          <radialGradient id="bgGrad" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#1A1F28" stop-opacity="0.8" />
+            <stop offset="100%" stop-color="#0A0B0D" stop-opacity="1" />
           </radialGradient>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
         </defs>
-        <rect width="1000" height="1000" fill="url(#bgGrad)" />
-
-        <!-- 연결선 (먼저 그려야 노드 뒤에 깔림) -->
-        <g id="links">
-          {linkPairs.map(([a, b]) => {
-            const na = SKILL_NODES.find(n => n.id === a);
-            const nb = SKILL_NODES.find(n => n.id === b);
-            if (!na || !nb) return null;
-            return (
-              <line
-                class="link"
-                data-from={a}
-                data-to={b}
-                x1={na.x}
-                y1={na.y}
-                x2={nb.x}
-                y2={nb.y}
-                stroke="#32363F"
-                stroke-width="2"
-              />
-            );
-          })}
-        </g>
-
-        <!-- 노드 -->
-        <g id="nodes">
-          {SKILL_NODES.map(node => (
-            <g
-              class={`node node--${node.type} ${node.isStart ? 'node--start' : ''}`}
-              data-id={node.id}
-              data-class={node.classKey}
-              transform={`translate(${node.x}, ${node.y})`}
-              tabindex="0"
-              role="button"
-              aria-label={node.name}
-            >
-              <circle class="node__bg" r={node.type === 'keystone' ? 22 : node.type === 'notable' ? 17 : 12} />
-              <circle class="node__border" r={node.type === 'keystone' ? 22 : node.type === 'notable' ? 17 : 12} fill="none" stroke-width="3" />
-              {node.isStart && (
-                <text class="node__icon" text-anchor="middle" dy="5">★</text>
-              )}
-            </g>
-          ))}
+        <rect x="-1000" y="-1000" width="2000" height="2000" fill="url(#bgGrad)" />
+        <g id="viewport">
+          <g id="links"></g>
+          <g id="nodes"></g>
         </g>
       </svg>
     </div>
 
     <!-- 활성 노드 정보 패널 -->
     <aside class="planner__info mc-card">
-      <h3>활성화된 노드 효과</h3>
+      <h3>현재 클래스 활성 노드</h3>
       <ul id="active-list" class="planner__active-list">
-        <li class="planner__empty">아직 활성화된 노드가 없습니다.</li>
+        <li class="planner__empty">시작 노드 외에 활성화된 노드가 없습니다.</li>
       </ul>
     </aside>
 
     <!-- 안내 -->
     <div class="planner__notice">
       <p>
-        ℹ️ 이 시뮬레이터는 실제 게임의 시스템을 단순화한 학습용 도구입니다.
-        실제 모드의 588개 노드 중 일부만 구현되어 있으며, 효과 수치도 예시입니다.
-        정확한 정보는 <a href="https://ciscos-rpg.fandom.com/wiki/Passive_Skill_Tree" target="_blank" rel="noopener">Cisco's RPG Wiki</a>를 참고하세요.
+        ℹ️ 데이터는 <a href="https://github.com/Daripher/Passive-Skill-Tree" target="_blank" rel="noopener">Daripher의 Passive Skill Tree mod 저장소</a>에서 자동 추출했습니다.
+        실제 게임과 동일한 노드 좌표·연결·효과를 사용하지만, 아이콘·UI는 단순화되어 있습니다.
       </p>
       <p>
-        📖 시스템 자체에 대한 자세한 설명은 <a href={`${base}info/passive-skill-tree/`}>Passive Skill Tree 가이드</a>를 읽어보세요.
+        📖 시스템에 대한 자세한 설명은 <a href={`${base}info/passive-skill-tree/`}>Passive Skill Tree 가이드</a>를 참고하세요.
       </p>
     </div>
   </article>
 
-  <!-- 데이터를 클라이언트로 전달 -->
-  <script id="planner-data" type="application/json" set:html={JSON.stringify({
-    nodes: JSON.parse(nodesJson),
-    costs: JSON.parse(costsJson),
-    colors: JSON.parse(colorsJson),
-    totalPoints: TOTAL_POINTS,
-  })} />
+  <script id="planner-data" type="application/json" set:html={dataJson} />
 
   <script is:inline>
-    // ============================================
-    // 스킬 트리 빌더 - 클라이언트 로직
-    // ============================================
-    (function() {
-      const dataEl = document.getElementById('planner-data');
-      const data = JSON.parse(dataEl.textContent);
-      const { nodes, costs, colors, totalPoints } = data;
+  // ============================================
+  // 스킬 트리 빌더 (실제 데이터)
+  // ============================================
+  (function() {
+    const data = JSON.parse(document.getElementById('planner-data').textContent);
+    const { skills, classes } = data;
 
-      const nodeMap = new Map(nodes.map(n => [n.id, n]));
-      // 양방향 인접 그래프 만들기
-      const adjacency = new Map();
-      nodes.forEach(n => adjacency.set(n.id, new Set()));
+    // 클래스별 노드 맵
+    const byClass = {};
+    skills.forEach(s => {
+      if (!byClass[s.classKey]) byClass[s.classKey] = [];
+      byClass[s.classKey].push(s);
+    });
+
+    // ID -> 노드
+    const nodeMap = new Map(skills.map(s => [s.id, s]));
+
+    // 양방향 인접 그래프 (클래스별)
+    const adjacency = {};
+    Object.keys(byClass).forEach(cls => {
+      adjacency[cls] = new Map();
+      byClass[cls].forEach(n => adjacency[cls].set(n.id, new Set()));
+      byClass[cls].forEach(n => {
+        const allLinks = [...(n.directLinks || []), ...(n.longLinks || [])];
+        allLinks.forEach(target => {
+          if (adjacency[cls].has(target)) {
+            adjacency[cls].get(n.id).add(target);
+            adjacency[cls].get(target).add(n.id);
+          }
+        });
+      });
+    });
+
+    // 활성 노드 (클래스별)
+    const activeByClass = {};
+    Object.keys(classes).forEach(cls => {
+      // 시작 노드 자동 활성화
+      const startNode = byClass[cls].find(n => n.isStart);
+      activeByClass[cls] = new Set(startNode ? [startNode.id] : []);
+    });
+
+    const STORAGE_KEY = 'cisco-skill-tree-real-v1';
+    // 저장된 빌드 복원
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      Object.keys(saved).forEach(cls => {
+        if (activeByClass[cls] && Array.isArray(saved[cls])) {
+          saved[cls].forEach(id => {
+            if (nodeMap.has(id)) activeByClass[cls].add(id);
+          });
+        }
+      });
+    } catch (e) {}
+
+    let currentClass = Object.keys(classes)[0];
+
+    const svg = document.getElementById('skill-tree');
+    const linksGroup = document.getElementById('links');
+    const nodesGroup = document.getElementById('nodes');
+    const nodesCountEl = document.getElementById('nodes-count');
+    const activeListEl = document.getElementById('active-list');
+    const activeClassLabel = document.getElementById('active-class-label');
+
+    // ============ 트리 렌더 ============
+    function buildTree(cls) {
+      // 기존 비우기
+      linksGroup.innerHTML = '';
+      nodesGroup.innerHTML = '';
+
+      const nodes = byClass[cls];
+      const seenLinks = new Set();
+
+      // 연결선
       nodes.forEach(n => {
-        n.links.forEach(target => {
-          adjacency.get(n.id).add(target);
-          if (adjacency.has(target)) adjacency.get(target).add(n.id);
+        const allLinks = [...(n.directLinks || []), ...(n.longLinks || [])];
+        allLinks.forEach(targetId => {
+          const key = [n.id, targetId].sort().join('|');
+          if (seenLinks.has(key)) return;
+          seenLinks.add(key);
+          const target = nodeMap.get(targetId);
+          if (!target) return;
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('class', 'link');
+          line.setAttribute('data-from', n.id);
+          line.setAttribute('data-to', targetId);
+          line.setAttribute('x1', n.x);
+          line.setAttribute('y1', n.y);
+          line.setAttribute('x2', target.x);
+          line.setAttribute('y2', target.y);
+          line.setAttribute('stroke', '#2A3340');
+          line.setAttribute('stroke-width', '0.6');
+          linksGroup.appendChild(line);
         });
       });
 
-      // 활성화된 노드 (코어는 항상 활성)
-      const activeSet = new Set(['core']);
+      // 노드
+      nodes.forEach(n => {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'node node--' + n.type + (n.isStart ? ' node--start' : ''));
+        g.setAttribute('data-id', n.id);
+        g.setAttribute('transform', 'translate(' + n.x + ',' + n.y + ')');
+        g.setAttribute('tabindex', '0');
+        g.setAttribute('role', 'button');
+        g.setAttribute('aria-label', n.name);
 
-      const STORAGE_KEY = 'cisco-skill-tree-build-v1';
-      // 저장된 빌드 복원
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed)) {
-            parsed.forEach(id => {
-              if (nodeMap.has(id)) activeSet.add(id);
-            });
-          }
+        // 노드 크기를 viewBox 기준으로 변환 (실제 size는 16~32px)
+        const r = n.size * 0.35;
+        const bg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        bg.setAttribute('class', 'node__bg');
+        bg.setAttribute('r', String(r));
+        g.appendChild(bg);
+
+        const border = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        border.setAttribute('class', 'node__border');
+        border.setAttribute('r', String(r));
+        border.setAttribute('fill', 'none');
+        border.setAttribute('stroke-width', String(r * 0.15));
+        g.appendChild(border);
+
+        if (n.isStart) {
+          const star = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          star.setAttribute('class', 'node__icon');
+          star.setAttribute('text-anchor', 'middle');
+          star.setAttribute('dy', '3');
+          star.textContent = '★';
+          g.appendChild(star);
         }
-      } catch (e) { /* ignore */ }
 
-      const svg = document.getElementById('skill-tree');
-      const linksGroup = document.getElementById('links');
-      const nodesGroup = document.getElementById('nodes');
-      const pointsUsedEl = document.getElementById('points-used');
-      const nodesCountEl = document.getElementById('nodes-count');
-      const activeListEl = document.getElementById('active-list');
-
-      function getCost(nodeId) {
-        const n = nodeMap.get(nodeId);
-        if (!n || nodeId === 'core') return 0;
-        return costs[n.type] || 1;
-      }
-
-      function calcUsedPoints() {
-        let total = 0;
-        activeSet.forEach(id => { total += getCost(id); });
-        return total;
-      }
-
-      // 어떤 노드가 활성 가능한가? (코어 또는 활성 노드와 인접)
-      function canActivate(nodeId) {
-        if (activeSet.has(nodeId)) return false;
-        const adj = adjacency.get(nodeId);
-        if (!adj) return false;
-        for (const neighbor of adj) {
-          if (activeSet.has(neighbor)) return true;
-        }
-        return false;
-      }
-
-      // 어떤 노드를 비활성화 할 수 있는가? (제거해도 다른 활성 노드들이 코어와 연결 유지되는가)
-      function canDeactivate(nodeId) {
-        if (nodeId === 'core') return false;
-        if (!activeSet.has(nodeId)) return false;
-        // 이 노드를 뺀 상태로 BFS 해서 모든 활성 노드가 코어에서 도달 가능한지 확인
-        const without = new Set(activeSet);
-        without.delete(nodeId);
-        if (!without.has('core')) return true;
-        const visited = new Set();
-        const queue = ['core'];
-        while (queue.length > 0) {
-          const cur = queue.shift();
-          if (visited.has(cur)) continue;
-          visited.add(cur);
-          const adj = adjacency.get(cur);
-          if (!adj) continue;
-          adj.forEach(neighbor => {
-            if (without.has(neighbor) && !visited.has(neighbor)) {
-              queue.push(neighbor);
-            }
-          });
-        }
-        // 모든 활성(without) 노드가 visited에 있어야 함
-        for (const id of without) {
-          if (!visited.has(id)) return false;
-        }
-        return true;
-      }
-
-      function render() {
-        const used = calcUsedPoints();
-        pointsUsedEl.textContent = String(used);
-        nodesCountEl.textContent = String(activeSet.size - 1); // 코어 제외
-
-        // 노드 상태 업데이트
-        nodesGroup.querySelectorAll('.node').forEach(g => {
-          const id = g.getAttribute('data-id');
-          const node = nodeMap.get(id);
-          const classKey = node.classKey;
-          const color = colors[classKey] || '#888';
-
-          const isActive = activeSet.has(id);
-          const canAct = !isActive && canActivate(id);
-
-          g.classList.toggle('is-active', isActive);
-          g.classList.toggle('is-available', canAct);
-          g.classList.toggle('is-locked', !isActive && !canAct);
-
-          const bg = g.querySelector('.node__bg');
-          const border = g.querySelector('.node__border');
-          if (isActive) {
-            bg.setAttribute('fill', color);
-            bg.setAttribute('fill-opacity', '0.85');
-            border.setAttribute('stroke', color);
-            border.setAttribute('stroke-opacity', '1');
-            g.style.filter = 'drop-shadow(0 0 6px ' + color + 'aa)';
-          } else if (canAct) {
-            bg.setAttribute('fill', color);
-            bg.setAttribute('fill-opacity', '0.18');
-            border.setAttribute('stroke', color);
-            border.setAttribute('stroke-opacity', '0.6');
-            g.style.filter = '';
-          } else {
-            bg.setAttribute('fill', '#1A1C21');
-            bg.setAttribute('fill-opacity', '1');
-            border.setAttribute('stroke', '#32363F');
-            border.setAttribute('stroke-opacity', '1');
-            g.style.filter = '';
-          }
+        // 클릭 / 호버
+        g.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleNodeClick(n.id);
         });
-
-        // 연결선 상태 업데이트
-        linksGroup.querySelectorAll('.link').forEach(line => {
-          const from = line.getAttribute('data-from');
-          const to = line.getAttribute('data-to');
-          const bothActive = activeSet.has(from) && activeSet.has(to);
-          if (bothActive) {
-            const node = nodeMap.get(from === 'core' ? to : from);
-            const color = colors[node.classKey] || '#fff';
-            line.setAttribute('stroke', color);
-            line.setAttribute('stroke-opacity', '0.8');
-            line.setAttribute('stroke-width', '3');
-          } else {
-            line.setAttribute('stroke', '#32363F');
-            line.setAttribute('stroke-opacity', '1');
-            line.setAttribute('stroke-width', '2');
-          }
-        });
-
-        // 활성 노드 목록 패널
-        if (activeSet.size <= 1) {
-          activeListEl.innerHTML = '<li class="planner__empty">아직 활성화된 노드가 없습니다.</li>';
-        } else {
-          const items = [];
-          // 클래스별로 그룹화
-          const byClass = {};
-          activeSet.forEach(id => {
-            if (id === 'core') return;
-            const n = nodeMap.get(id);
-            if (!byClass[n.classKey]) byClass[n.classKey] = [];
-            byClass[n.classKey].push(n);
-          });
-          Object.keys(byClass).forEach(classKey => {
-            const color = colors[classKey];
-            byClass[classKey].forEach(n => {
-              items.push(
-                '<li class="planner__active-item" style="border-left-color:' + color + '">' +
-                '<div class="planner__active-name">' + n.name +
-                ' <span class="planner__active-cost">(-' + getCost(n.id) + ')</span>' +
-                '</div>' +
-                '<div class="planner__active-desc">' + n.desc + '</div>' +
-                '</li>'
-              );
-            });
-          });
-          activeListEl.innerHTML = items.join('');
-        }
-      }
-
-      function activate(id) {
-        const used = calcUsedPoints();
-        const cost = getCost(id);
-        if (used + cost > totalPoints) {
-          alert('포인트가 부족합니다! (남은 포인트: ' + (totalPoints - used) + ', 필요: ' + cost + ')');
-          return;
-        }
-        if (!canActivate(id)) return;
-        activeSet.add(id);
-        render();
-      }
-
-      function deactivate(id) {
-        if (!canDeactivate(id)) {
-          alert('이 노드를 제거하면 다른 노드가 코어에서 끊어집니다.');
-          return;
-        }
-        activeSet.delete(id);
-        render();
-      }
-
-      // 클릭 이벤트
-      nodesGroup.querySelectorAll('.node').forEach(g => {
-        const id = g.getAttribute('data-id');
-        if (id === 'core') return; // 코어는 조작 불가
-
-        g.addEventListener('click', () => {
-          if (activeSet.has(id)) {
-            deactivate(id);
-          } else {
-            activate(id);
-          }
-        });
-
+        g.addEventListener('mouseenter', () => showTooltip(g, n));
+        g.addEventListener('mouseleave', hideTooltip);
         g.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            g.dispatchEvent(new Event('click'));
+            handleNodeClick(n.id);
           }
         });
 
-        // 툴팁
-        const node = nodeMap.get(id);
-        g.addEventListener('mouseenter', () => showTooltip(g, node));
-        g.addEventListener('mouseleave', hideTooltip);
+        nodesGroup.appendChild(g);
       });
 
-      // 툴팁
-      let tooltipEl = null;
-      function showTooltip(g, node) {
-        if (!tooltipEl) {
-          tooltipEl = document.createElement('div');
-          tooltipEl.className = 'mc-tooltip planner__tooltip';
-          document.body.appendChild(tooltipEl);
-        }
-        const cost = getCost(node.id);
-        tooltipEl.innerHTML =
-          '<p class="mc-tooltip__title">' + node.name + '</p>' +
-          '<p class="mc-tooltip__desc">' + node.desc + '</p>' +
-          '<p class="mc-tooltip__rare">' + (node.type === 'keystone' ? '⚡ KEYSTONE' : node.type === 'notable' ? '★ NOTABLE' : 'Minor') +
-          ' · 비용: ' + cost + '</p>';
-        const rect = g.getBoundingClientRect();
-        tooltipEl.style.position = 'fixed';
-        tooltipEl.style.left = (rect.left + rect.width + 12) + 'px';
-        tooltipEl.style.top = (rect.top) + 'px';
-        tooltipEl.style.zIndex = '1000';
-        tooltipEl.style.maxWidth = '260px';
-        tooltipEl.style.pointerEvents = 'none';
+      // viewBox를 클래스 트리 범위에 맞게 설정
+      fitViewBox();
+      updateVisuals();
+    }
+
+    // ============ 인접/연결 검증 ============
+    function canActivate(cls, id) {
+      if (activeByClass[cls].has(id)) return false;
+      const adj = adjacency[cls].get(id);
+      if (!adj) return false;
+      for (const n of adj) {
+        if (activeByClass[cls].has(n)) return true;
       }
-      function hideTooltip() {
-        if (tooltipEl) tooltipEl.remove();
-        tooltipEl = null;
+      return false;
+    }
+
+    function canDeactivate(cls, id) {
+      const node = nodeMap.get(id);
+      if (!node || node.isStart) return false;
+      if (!activeByClass[cls].has(id)) return false;
+      // BFS: id를 제외한 상태에서 시작 노드에서 모든 활성 노드 도달 가능?
+      const startNode = byClass[cls].find(n => n.isStart);
+      if (!startNode) return true;
+      const without = new Set(activeByClass[cls]);
+      without.delete(id);
+      const visited = new Set();
+      const queue = [startNode.id];
+      while (queue.length > 0) {
+        const cur = queue.shift();
+        if (visited.has(cur)) continue;
+        visited.add(cur);
+        const adj = adjacency[cls].get(cur);
+        if (!adj) continue;
+        adj.forEach(neighbor => {
+          if (without.has(neighbor) && !visited.has(neighbor)) {
+            queue.push(neighbor);
+          }
+        });
       }
+      for (const id of without) {
+        if (!visited.has(id)) return false;
+      }
+      return true;
+    }
 
-      // 컨트롤 버튼
-      document.getElementById('btn-reset').addEventListener('click', () => {
-        if (!confirm('정말 모든 노드를 초기화하시겠습니까?')) return;
-        activeSet.clear();
-        activeSet.add('core');
-        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-        render();
-      });
+    function handleNodeClick(id) {
+      const node = nodeMap.get(id);
+      if (!node || node.isStart) return;
+      const cls = currentClass;
+      if (activeByClass[cls].has(id)) {
+        if (!canDeactivate(cls, id)) {
+          alert('이 노드를 제거하면 다른 노드가 시작점에서 끊어집니다.');
+          return;
+        }
+        activeByClass[cls].delete(id);
+      } else {
+        if (!canActivate(cls, id)) {
+          return;
+        }
+        activeByClass[cls].add(id);
+      }
+      updateVisuals();
+    }
 
-      document.getElementById('btn-save').addEventListener('click', () => {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(activeSet)));
-          alert('빌드가 저장되었습니다! 다음 방문 시 자동으로 불러옵니다.');
-        } catch (e) {
-          alert('저장에 실패했습니다.');
+    // ============ 시각 업데이트 ============
+    function updateVisuals() {
+      const cls = currentClass;
+      const color = classes[cls].color;
+      activeClassLabel.textContent = classes[cls].nameKo;
+      // 시작 노드 제외 카운트
+      const cnt = activeByClass[cls].size - 1;
+      nodesCountEl.textContent = String(Math.max(0, cnt));
+
+      nodesGroup.querySelectorAll('.node').forEach(g => {
+        const id = g.getAttribute('data-id');
+        const isActive = activeByClass[cls].has(id);
+        const canAct = !isActive && canActivate(cls, id);
+        g.classList.toggle('is-active', isActive);
+        g.classList.toggle('is-available', canAct);
+        g.classList.toggle('is-locked', !isActive && !canAct);
+        const bg = g.querySelector('.node__bg');
+        const border = g.querySelector('.node__border');
+        if (isActive) {
+          bg.setAttribute('fill', color);
+          bg.setAttribute('fill-opacity', '0.85');
+          border.setAttribute('stroke', color);
+          border.setAttribute('stroke-opacity', '1');
+        } else if (canAct) {
+          bg.setAttribute('fill', color);
+          bg.setAttribute('fill-opacity', '0.18');
+          border.setAttribute('stroke', color);
+          border.setAttribute('stroke-opacity', '0.55');
+        } else {
+          bg.setAttribute('fill', '#1A1C21');
+          bg.setAttribute('fill-opacity', '1');
+          border.setAttribute('stroke', '#3A4150');
+          border.setAttribute('stroke-opacity', '1');
         }
       });
 
-      // 초기 렌더
-      render();
-    })();
+      linksGroup.querySelectorAll('.link').forEach(line => {
+        const from = line.getAttribute('data-from');
+        const to = line.getAttribute('data-to');
+        const both = activeByClass[cls].has(from) && activeByClass[cls].has(to);
+        if (both) {
+          line.setAttribute('stroke', color);
+          line.setAttribute('stroke-opacity', '0.85');
+          line.setAttribute('stroke-width', '1');
+        } else {
+          line.setAttribute('stroke', '#2A3340');
+          line.setAttribute('stroke-opacity', '0.6');
+          line.setAttribute('stroke-width', '0.6');
+        }
+      });
+
+      // 활성 노드 패널
+      const items = [];
+      activeByClass[cls].forEach(id => {
+        const n = nodeMap.get(id);
+        if (!n || n.isStart) return;
+        const bonusHtml = n.bonuses && n.bonuses.length > 0
+          ? '<ul class="planner__bonuses">' + n.bonuses.map(b => '<li>' + escapeHtml(b) + '</li>').join('') + '</ul>'
+          : '<div class="planner__bonuses-empty">효과 없음</div>';
+        items.push(
+          '<li class="planner__active-item" style="border-left-color:' + color + '">' +
+          '<div class="planner__active-name">' + escapeHtml(n.name) + ' <span class="planner__active-type">(' + n.type + ')</span></div>' +
+          bonusHtml +
+          '</li>'
+        );
+      });
+      if (items.length === 0) {
+        activeListEl.innerHTML = '<li class="planner__empty">시작 노드 외에 활성화된 노드가 없습니다.</li>';
+      } else {
+        activeListEl.innerHTML = items.join('');
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ============ 툴팁 ============
+    let tooltipEl = null;
+    function showTooltip(g, node) {
+      if (!tooltipEl) {
+        tooltipEl = document.createElement('div');
+        tooltipEl.className = 'mc-tooltip planner__tooltip';
+        document.body.appendChild(tooltipEl);
+      }
+      const bonuses = node.bonuses && node.bonuses.length > 0
+        ? node.bonuses.map(b => '<div>• ' + escapeHtml(b) + '</div>').join('')
+        : '<div style="color:#888">효과 없음</div>';
+      const typeLabel = {
+        start: '★ 시작',
+        keystone: '⚡ KEYSTONE',
+        notable: '◆ NOTABLE',
+        minor: '· Minor',
+      }[node.type] || node.type;
+      tooltipEl.innerHTML =
+        '<p class="mc-tooltip__title">' + escapeHtml(node.name) + '</p>' +
+        '<div class="mc-tooltip__desc">' + bonuses + '</div>' +
+        '<p class="mc-tooltip__rare">' + typeLabel + '</p>';
+      const rect = g.getBoundingClientRect();
+      tooltipEl.style.position = 'fixed';
+      tooltipEl.style.left = (rect.right + 12) + 'px';
+      tooltipEl.style.top = (rect.top) + 'px';
+      tooltipEl.style.zIndex = '1000';
+      tooltipEl.style.maxWidth = '280px';
+      tooltipEl.style.pointerEvents = 'none';
+      // 화면 밖으로 나가면 왼쪽으로 이동
+      const tipRect = tooltipEl.getBoundingClientRect();
+      if (tipRect.right > window.innerWidth - 20) {
+        tooltipEl.style.left = (rect.left - tipRect.width - 12) + 'px';
+      }
+    }
+    function hideTooltip() {
+      if (tooltipEl) tooltipEl.remove();
+      tooltipEl = null;
+    }
+
+    // ============ Pan / Zoom ============
+    let viewBox = { x: -200, y: -200, w: 400, h: 400 };
+    function setViewBox() {
+      svg.setAttribute('viewBox', viewBox.x + ' ' + viewBox.y + ' ' + viewBox.w + ' ' + viewBox.h);
+    }
+    function fitViewBox() {
+      const nodes = byClass[currentClass];
+      if (!nodes.length) return;
+      const xs = nodes.map(n => n.x);
+      const ys = nodes.map(n => n.y);
+      const minX = Math.min(...xs) - 25;
+      const maxX = Math.max(...xs) + 25;
+      const minY = Math.min(...ys) - 25;
+      const maxY = Math.max(...ys) + 25;
+      const w = maxX - minX;
+      const h = maxY - minY;
+      const size = Math.max(w, h);
+      const cx = (minX + maxX) / 2;
+      const cy = (minY + maxY) / 2;
+      viewBox = { x: cx - size / 2, y: cy - size / 2, w: size, h: size };
+      setViewBox();
+    }
+
+    // 마우스 휠 줌
+    svg.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const rect = svg.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      // SVG 좌표계로 변환
+      const svgX = viewBox.x + (mx / rect.width) * viewBox.w;
+      const svgY = viewBox.y + (my / rect.height) * viewBox.h;
+      const factor = e.deltaY > 0 ? 1.18 : 1 / 1.18;
+      const newW = viewBox.w * factor;
+      const newH = viewBox.h * factor;
+      // 확대 한도
+      if (newW < 60 || newW > 1200) return;
+      viewBox.x = svgX - (mx / rect.width) * newW;
+      viewBox.y = svgY - (my / rect.height) * newH;
+      viewBox.w = newW;
+      viewBox.h = newH;
+      setViewBox();
+    }, { passive: false });
+
+    // 드래그 팬
+    let isPanning = false;
+    let panStart = { x: 0, y: 0, vbX: 0, vbY: 0 };
+    svg.addEventListener('mousedown', (e) => {
+      // 노드 위에서 클릭 시 팬 시작 안 함
+      if (e.target.closest('.node')) return;
+      isPanning = true;
+      panStart.x = e.clientX;
+      panStart.y = e.clientY;
+      panStart.vbX = viewBox.x;
+      panStart.vbY = viewBox.y;
+      svg.style.cursor = 'grabbing';
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (!isPanning) return;
+      const rect = svg.getBoundingClientRect();
+      const dx = (e.clientX - panStart.x) * (viewBox.w / rect.width);
+      const dy = (e.clientY - panStart.y) * (viewBox.h / rect.height);
+      viewBox.x = panStart.vbX - dx;
+      viewBox.y = panStart.vbY - dy;
+      setViewBox();
+    });
+    window.addEventListener('mouseup', () => {
+      isPanning = false;
+      svg.style.cursor = '';
+    });
+    // 터치 (모바일)
+    let touchStart = null;
+    let pinchStart = null;
+    svg.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        touchStart = {
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY,
+          vbX: viewBox.x,
+          vbY: viewBox.y,
+        };
+      } else if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        pinchStart = { dist: Math.hypot(dx, dy), w: viewBox.w, h: viewBox.h };
+      }
+    }, { passive: true });
+    svg.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1 && touchStart) {
+        const rect = svg.getBoundingClientRect();
+        const dx = (e.touches[0].clientX - touchStart.x) * (viewBox.w / rect.width);
+        const dy = (e.touches[0].clientY - touchStart.y) * (viewBox.h / rect.height);
+        viewBox.x = touchStart.vbX - dx;
+        viewBox.y = touchStart.vbY - dy;
+        setViewBox();
+        e.preventDefault();
+      } else if (e.touches.length === 2 && pinchStart) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.hypot(dx, dy);
+        const factor = pinchStart.dist / dist;
+        viewBox.w = Math.max(60, Math.min(1200, pinchStart.w * factor));
+        viewBox.h = Math.max(60, Math.min(1200, pinchStart.h * factor));
+        setViewBox();
+        e.preventDefault();
+      }
+    }, { passive: false });
+    svg.addEventListener('touchend', () => {
+      touchStart = null;
+      pinchStart = null;
+    });
+
+    // ============ 클래스 탭 ============
+    document.querySelectorAll('.planner__tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.planner__tab').forEach(b => {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-selected', 'true');
+        currentClass = btn.getAttribute('data-class');
+        buildTree(currentClass);
+      });
+    });
+
+    // ============ 컨트롤 버튼 ============
+    document.getElementById('btn-fit').addEventListener('click', fitViewBox);
+
+    document.getElementById('btn-reset-class').addEventListener('click', () => {
+      if (!confirm('현재 클래스의 모든 노드를 리셋할까요?')) return;
+      const cls = currentClass;
+      const startNode = byClass[cls].find(n => n.isStart);
+      activeByClass[cls] = new Set(startNode ? [startNode.id] : []);
+      updateVisuals();
+    });
+
+    document.getElementById('btn-reset-all').addEventListener('click', () => {
+      if (!confirm('정말 모든 클래스의 빌드를 초기화할까요?')) return;
+      Object.keys(classes).forEach(cls => {
+        const startNode = byClass[cls].find(n => n.isStart);
+        activeByClass[cls] = new Set(startNode ? [startNode.id] : []);
+      });
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      updateVisuals();
+    });
+
+    document.getElementById('btn-save').addEventListener('click', () => {
+      try {
+        const out = {};
+        Object.keys(activeByClass).forEach(cls => {
+          out[cls] = Array.from(activeByClass[cls]);
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(out));
+        alert('5개 클래스의 빌드가 모두 저장되었습니다!');
+      } catch (e) {
+        alert('저장 실패: ' + e.message);
+      }
+    });
+
+    // 초기화
+    buildTree(currentClass);
+  })();
   </script>
 </BaseLayout>
 
 <style>
   .planner {
     padding: var(--space-6) 0;
-    max-width: 1100px;
+    max-width: 1200px;
   }
 
   .planner__header {
@@ -494,10 +659,54 @@ const colorsJson = JSON.stringify(CLASS_COLORS);
 
   .planner__lead {
     color: var(--text-secondary);
-    max-width: 700px;
+    max-width: 720px;
     margin: 0 auto;
     line-height: 1.6;
   }
+
+  /* 클래스 탭 */
+  .planner__tabs {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .planner__tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--space-3) var(--space-4);
+    min-width: 110px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-bottom: 3px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+
+  .planner__tab:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-heading);
+    border-color: var(--border-color-light);
+  }
+
+  .planner__tab.is-active {
+    background: rgba(255,255,255,0.04);
+    border-color: var(--tab-color);
+    border-bottom-color: var(--tab-color);
+    color: #fff;
+    box-shadow: 0 0 0 1px var(--tab-color), 0 0 14px color-mix(in srgb, var(--tab-color) 30%, transparent);
+  }
+
+  .planner__tab-emoji { font-size: 1.4rem; }
+  .planner__tab-name { font-size: var(--font-size-sm); font-weight: 700; }
+  .planner__tab-en { font-size: var(--font-size-xs); color: var(--text-muted); font-family: var(--font-mono); }
 
   /* 컨트롤 바 */
   .planner__controls {
@@ -505,9 +714,9 @@ const colorsJson = JSON.stringify(CLASS_COLORS);
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-4);
-    padding: var(--space-4) var(--space-5);
-    margin-bottom: var(--space-4);
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-5);
+    margin-bottom: var(--space-3);
   }
 
   .planner__points {
@@ -523,8 +732,10 @@ const colorsJson = JSON.stringify(CLASS_COLORS);
   }
 
   .planner__points-label {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .planner__points-value {
@@ -534,21 +745,15 @@ const colorsJson = JSON.stringify(CLASS_COLORS);
     font-family: var(--font-mono);
   }
 
-  .planner__points-sep,
-  .planner__points-total {
-    font-size: var(--font-size-lg);
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-  }
-
   .planner__buttons {
     display: flex;
     gap: var(--space-2);
+    flex-wrap: wrap;
   }
 
   /* 사용법 */
   .planner__how {
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-3);
     padding: var(--space-3) var(--space-4);
     background: rgba(74,237,217,0.04);
     border: 1px solid rgba(74,237,217,0.15);
@@ -582,85 +787,76 @@ const colorsJson = JSON.stringify(CLASS_COLORS);
     color: var(--text-secondary);
   }
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
+  .legend-item { display: flex; align-items: center; gap: var(--space-2); }
   .legend-dot {
     display: inline-block;
     border-radius: 50%;
     background: var(--color-diamond);
+    border: 1px solid var(--color-diamond);
   }
-  .legend-dot--minor { width: 12px; height: 12px; }
-  .legend-dot--notable { width: 16px; height: 16px; }
-  .legend-dot--keystone { width: 20px; height: 20px; }
+  .legend-dot--minor { width: 10px; height: 10px; }
+  .legend-dot--notable { width: 14px; height: 14px; }
+  .legend-dot--keystone { width: 18px; height: 18px; }
 
   /* SVG */
   .planner__svg-wrap {
-    background: var(--bg-card);
+    background: #0A0B0D;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 0;
     margin-bottom: var(--space-4);
     overflow: hidden;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 1 / 1;
+    max-height: 720px;
+    position: relative;
   }
 
   #skill-tree {
     display: block;
     width: 100%;
-    height: auto;
-    cursor: default;
+    height: 100%;
+    cursor: grab;
     user-select: none;
+    touch-action: none;
   }
 
   /* 노드 스타일 */
   :global(.node) {
     cursor: pointer;
-    transition: filter 0.2s ease;
+    transition: filter 0.15s ease;
   }
-
-  :global(.node--start) {
-    cursor: default;
-  }
-
-  :global(.node:hover .node__bg) {
-    filter: brightness(1.3);
-  }
-
-  :global(.node.is-locked) {
-    cursor: not-allowed;
-  }
-
-  :global(.node.is-locked .node__bg),
-  :global(.node.is-locked .node__border) {
-    opacity: 0.4;
-  }
-
+  :global(.node--start) { cursor: default; }
+  :global(.node:hover .node__bg) { filter: brightness(1.4); }
+  :global(.node.is-locked) { cursor: not-allowed; opacity: 0.55; }
+  :global(.node.is-active) { filter: drop-shadow(0 0 4px currentColor); }
   :global(.node__icon) {
     fill: #fff;
-    font-size: 14px;
+    font-size: 8px;
     font-weight: 700;
     pointer-events: none;
   }
-
   :global(.link) {
     pointer-events: none;
-    transition: stroke 0.2s, stroke-width 0.2s;
+    transition: stroke 0.15s, stroke-width 0.15s;
   }
 
   /* 활성 노드 목록 */
   .planner__info {
     padding: var(--space-4) var(--space-5);
     margin-bottom: var(--space-4);
+    max-height: 360px;
+    overflow-y: auto;
   }
 
   .planner__info h3 {
     font-size: var(--font-size-base);
     margin-bottom: var(--space-3);
     color: var(--text-heading);
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-color);
   }
 
   .planner__active-list {
@@ -684,18 +880,43 @@ const colorsJson = JSON.stringify(CLASS_COLORS);
     font-size: var(--font-size-sm);
   }
 
-  .planner__active-cost {
+  .planner__active-type {
     color: var(--text-muted);
-    font-family: var(--font-mono);
     font-size: var(--font-size-xs);
+    font-family: var(--font-mono);
     font-weight: 400;
+    text-transform: uppercase;
   }
 
-  .planner__active-desc {
+  .planner__bonuses {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .planner__bonuses li {
     font-size: var(--font-size-xs);
     color: var(--text-secondary);
-    margin-top: 2px;
     line-height: 1.5;
+    padding-left: 8px;
+    position: relative;
+  }
+
+  .planner__bonuses li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  .planner__bonuses-empty {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 4px;
   }
 
   .planner__empty {
@@ -720,16 +941,20 @@ const colorsJson = JSON.stringify(CLASS_COLORS);
     margin-bottom: var(--space-2);
   }
 
-  .planner__notice p:last-child {
-    margin-bottom: 0;
-  }
+  .planner__notice p:last-child { margin-bottom: 0; }
+  .planner__notice a { color: var(--text-link); }
 
-  .planner__notice a {
-    color: var(--text-link);
-  }
-
-  /* 툴팁 (전역 스타일) */
   :global(.planner__tooltip) {
     pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    .planner__tab {
+      min-width: 0;
+      padding: var(--space-2) var(--space-3);
+    }
+    .planner__tab-en { display: none; }
+    .planner__tab-emoji { font-size: 1.2rem; }
+    .planner__tab-name { font-size: var(--font-size-xs); }
   }
 </style>
