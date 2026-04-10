@@ -1,3 +1,4 @@
-# 모든 검색엔진 크롤러의 접근을 차단합니다
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://minecraftmodwiki.com/sitemap-index.xml

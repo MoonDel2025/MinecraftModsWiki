@@ -11,21 +11,42 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  keywords?: string;
   breadcrumbs?: { label: string; href?: string }[];
+  noindex?: boolean;
 }
 
 const base = import.meta.env.BASE_URL;
 
 const {
   title,
-  description = '마인크래프트 모드팩과 모드 정보를 한눈에. 공략, 가이드, 팁을 정리한 위키 사이트.',
+  description = '마인크래프트 모드팩과 모드 정보를 한 곳에서. RLCraft, ATM10, Cobbleverse 등 인기 모드팩 소개와 초보자 가이드, 공략, 팁을 정리한 한국어 위키.',
   ogImage = `${base}images/og-default.png`,
+  keywords = '마인크래프트, 마인크래프트 모드, 마인크래프트 모드팩, 마인크래프트 위키, 모드팩 추천, RLCraft, ATM10, Cobblemon, 모드팩 가이드, Minecraft mods, modpack',
   breadcrumbs,
+  noindex = false,
 } = Astro.props;
 
 const siteTitle = 'MC Mod Wiki';
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+
+// 사이트 전역 JSON-LD (홈에만 노출)
+const isHome = Astro.url.pathname === base || Astro.url.pathname === `${base}`;
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": siteTitle,
+  "alternateName": "마인크래프트 모드 위키",
+  "url": Astro.site?.href,
+  "inLanguage": "ko-KR",
+  "description": description,
+  "publisher": {
+    "@type": "Organization",
+    "name": siteTitle,
+    "email": "rabara1981@gmail.com",
+  },
+};
 ---
 
 <!DOCTYPE html>
@@ -34,11 +55,16 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
+  <meta name="keywords" content={keywords} />
+  <meta name="author" content="MC Mod Wiki" />
   <meta name="theme-color" content="#1a1a2e" />
-  <!-- 검색엔진 차단 (Google, Bing, Naver 등) -->
-  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
-  <meta name="googlebot" content="noindex, nofollow" />
-  <meta name="bingbot" content="noindex, nofollow" />
+  <meta name="format-detection" content="telephone=no" />
+
+  {noindex ? (
+    <meta name="robots" content="noindex, nofollow" />
+  ) : (
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  )}
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -58,6 +84,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   <link rel="canonical" href={canonicalUrl.href} />
   <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
   <link rel="manifest" href={`${base}manifest.json`} />
+  <link rel="sitemap" href={`${base}sitemap-index.xml`} />
 
   <!-- 폰트: Pretendard (한국어 최적 시스템 폰트 대체) -->
   <link
@@ -67,9 +94,14 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 
   <title>{fullTitle}</title>
 
+  {/* 구조화 데이터 - WebSite (홈에만) */}
+  {isHome && (
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(websiteSchema)} />
+  )}
+
   {/* 구조화 데이터 - Breadcrumb */}
   {breadcrumbs && breadcrumbs.length > 0 && (
-    <script type="application/ld+json" set:html={JSON.stringify({
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": breadcrumbs.map((bc, i) => ({

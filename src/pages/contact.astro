@@ -1,0 +1,164 @@
+---
+/**
+ * Contact 페이지 - 연락처 안내
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+const email = 'rabara1981@gmail.com';
+const breadcrumbs = [
+  { label: '홈', href: base },
+  { label: 'Contact' },
+];
+---
+
+<BaseLayout
+  title="Contact"
+  description="MC Mod Wiki에 모드팩 추가 요청, 정보 수정 제안, 오타 신고, 협업 문의 등을 보낼 수 있는 연락처 페이지입니다."
+  breadcrumbs={breadcrumbs}
+>
+  <article class="static-page container">
+    <header class="static-page__header">
+      <h1>Contact</h1>
+      <p class="static-page__lead">
+        제안, 문의, 오타 신고는 아래 이메일로 보내주세요. 가능한 한 빠르게 답변드리겠습니다.
+      </p>
+    </header>
+
+    <section class="static-page__section">
+      <h2>📧 이메일</h2>
+      <a href={`mailto:${email}`} class="contact-email">
+        {email}
+      </a>
+    </section>
+
+    <section class="static-page__section">
+      <h2>💬 어떤 내용을 보낼 수 있나요?</h2>
+      <ul class="static-page__list">
+        <li><strong>모드팩 추가 요청</strong> — 사이트에 등록되었으면 하는 모드팩</li>
+        <li><strong>모드 추가 요청</strong> — 자세한 정보가 궁금한 개별 모드</li>
+        <li><strong>정보 수정 제안</strong> — 잘못된 정보, 업데이트가 필요한 내용</li>
+        <li><strong>오타 / 깨진 링크 신고</strong></li>
+        <li><strong>가이드 기여</strong> — 새로운 공략, 팁 제보</li>
+        <li><strong>협업 / 광고 문의</strong></li>
+      </ul>
+    </section>
+
+    <section class="static-page__section">
+      <h2>📝 메일 작성 팁</h2>
+      <p>다음 정보를 함께 보내주시면 더 빠르게 처리할 수 있습니다.</p>
+      <ul class="static-page__list">
+        <li><strong>제목</strong>에 [모드팩 요청], [수정 제안], [오타 신고] 등 분류 표시</li>
+        <li>관련 페이지 URL (있는 경우)</li>
+        <li>참고할 수 있는 자료 링크 (CurseForge, Modrinth, 위키 등)</li>
+      </ul>
+    </section>
+
+    <div class="static-page__notice">
+      <p>
+        ⚠️ 본 사이트는 비공식 팬 사이트로, 모드/모드팩 자체에 대한 기술 지원은 제공하지 않습니다.
+        모드팩 설치 오류나 게임 내 버그는 해당 모드팩의 공식 디스코드나 CurseForge 페이지에 문의해주세요.
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .static-page {
+    max-width: 800px;
+    padding: var(--space-8) var(--space-4) var(--space-12);
+  }
+
+  .static-page__header {
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .static-page__header h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .static-page__lead {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .static-page__section {
+    margin-bottom: var(--space-8);
+  }
+
+  .static-page__section h2 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-3);
+    color: var(--text-heading);
+  }
+
+  .static-page__section p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--space-3);
+  }
+
+  .contact-email {
+    display: inline-block;
+    padding: var(--space-3) var(--space-5);
+    background: linear-gradient(180deg, rgba(74,237,217,0.12) 0%, rgba(74,237,217,0.06) 100%);
+    border: 1px solid rgba(74,237,217,0.3);
+    border-radius: var(--radius-md);
+    color: var(--color-diamond);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .contact-email:hover {
+    background: linear-gradient(180deg, rgba(74,237,217,0.2) 0%, rgba(74,237,217,0.1) 100%);
+    color: #fff;
+    box-shadow: 0 0 16px rgba(74,237,217,0.2);
+  }
+
+  .static-page__list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .static-page__list li {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    padding-left: var(--space-4);
+    position: relative;
+    margin-bottom: var(--space-2);
+  }
+
+  .static-page__list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--color-diamond);
+  }
+
+  .static-page__list strong {
+    color: var(--text-primary);
+  }
+
+  .static-page__notice {
+    margin-top: var(--space-10);
+    padding: var(--space-4) var(--space-5);
+    background: rgba(255,215,0,0.04);
+    border: 1px solid rgba(255,215,0,0.15);
+    border-left: 3px solid var(--color-gold);
+    border-radius: var(--radius-md);
+  }
+
+  .static-page__notice p {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>
