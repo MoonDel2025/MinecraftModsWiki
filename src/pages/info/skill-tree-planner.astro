@@ -37,6 +37,7 @@ const dataJson = JSON.stringify({
   title="스킬 트리 찍어보기 | Cisco RPG"
   description="Cisco's Fantasy Medieval RPG의 Passive Skill Tree 시뮬레이터. 5개 클래스(연금술사·대장장이·요리사·인챈터·사냥꾼) 305개 실제 노드를 직접 클릭해서 빌드를 시뮬레이션해보세요."
   breadcrumbs={breadcrumbs}
+  noindex={true}
 >
   <article class="planner container">
     <header class="planner__header">
@@ -147,7 +148,7 @@ const dataJson = JSON.stringify({
     </div>
   </article>
 
-  <script id="planner-data" type="application/json" set:html={dataJson} />
+  <script id="planner-data" type="application/json" is:inline set:html={dataJson} />
 
   <script is:inline>
   // ============================================
