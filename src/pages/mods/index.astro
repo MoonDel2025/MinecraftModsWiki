@@ -7,6 +7,7 @@ import ModCard from '../../components/ModCard.astro';
 import TagList from '../../components/TagList.astro';
 import { getAllMods, getAllCategories } from '../../utils/data';
 
+const base = import.meta.env.BASE_URL;
 const mods = getAllMods();
 const categories = getAllCategories();
 const tag = Astro.url.searchParams.get('tag');
@@ -15,7 +16,7 @@ const filteredMods = tag
   : mods;
 
 const breadcrumbs = [
-  { label: '홈', href: '/' },
+  { label: '홈', href: base },
   { label: '모드' },
 ];
 ---
@@ -36,7 +37,7 @@ const breadcrumbs = [
 
     <!-- 카테고리 필터 -->
     <div class="filter-bar">
-      <TagList tags={categories} baseUrl="/mods/" activeTag={tag || undefined} />
+      <TagList tags={categories} baseUrl={`${base}mods/`} activeTag={tag || undefined} />
     </div>
 
     <!-- 검색 -->
@@ -69,7 +70,7 @@ const breadcrumbs = [
     {filteredMods.length === 0 && (
       <div class="empty-state">
         <p>해당 조건에 맞는 모드가 없습니다.</p>
-        <a href="/mods/" class="mc-btn">전체 보기</a>
+        <a href={`${base}mods/`} class="mc-btn">전체 보기</a>
       </div>
     )}
   </section>

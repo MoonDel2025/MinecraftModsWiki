@@ -10,7 +10,7 @@ const guides = getAllGuides();
 const categories = [...new Set(guides.map(g => g.category))].sort();
 
 const breadcrumbs = [
-  { label: '홈', href: '/' },
+  { label: '홈', href: import.meta.env.BASE_URL },
   { label: '가이드' },
 ];
 ---

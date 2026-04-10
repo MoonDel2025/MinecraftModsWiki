@@ -11,9 +11,10 @@ interface Props {
 }
 
 const { slug, name, summary, category, tags } = Astro.props;
+const base = import.meta.env.BASE_URL;
 ---
 
-<a href={`/mods/${slug}/`} class="mod-card">
+<a href={`${base}mods/${slug}/`} class="mod-card">
   <div class="mod-card__body">
     <div class="mod-card__header">
       <h3 class="mod-card__title">{name}</h3>

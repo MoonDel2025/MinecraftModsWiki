@@ -14,10 +14,12 @@ interface Props {
   breadcrumbs?: { label: string; href?: string }[];
 }
 
+const base = import.meta.env.BASE_URL;
+
 const {
   title,
   description = '마인크래프트 모드팩과 모드 정보를 한눈에. 공략, 가이드, 팁을 정리한 위키 사이트.',
-  ogImage = '/images/og-default.png',
+  ogImage = `${base}images/og-default.png`,
   breadcrumbs,
 } = Astro.props;
 
@@ -50,8 +52,8 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
   <meta name="twitter:image" content={ogImage} />
 
   <link rel="canonical" href={canonicalUrl.href} />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+  <link rel="manifest" href={`${base}manifest.json`} />
 
   <!-- 폰트: Pretendard (한국어 최적 시스템 폰트 대체) -->
   <link

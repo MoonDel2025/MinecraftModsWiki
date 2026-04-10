@@ -19,13 +19,15 @@ interface Props {
 }
 
 const { slug, name, summary, minecraftVersion, loader, difficulty, tags, featured, coverImage } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const imgSrc = coverImage ? (coverImage.startsWith('/') ? `${base}${coverImage.slice(1)}` : coverImage) : undefined;
 ---
 
-<a href={`/modpacks/${slug}/`} class="modpack-card" data-featured={featured || undefined}>
+<a href={`${base}modpacks/${slug}/`} class="modpack-card" data-featured={featured || undefined}>
   <!-- 썸네일 100x100 -->
   <div class="modpack-card__thumb">
-    {coverImage ? (
-      <img src={coverImage} alt={`${name} 커버 이미지`} loading="lazy" />
+    {imgSrc ? (
+      <img src={imgSrc} alt={`${name} 커버 이미지`} loading="lazy" />
     ) : (
       <div class="modpack-card__placeholder" aria-hidden="true">
         <span>⛏</span>

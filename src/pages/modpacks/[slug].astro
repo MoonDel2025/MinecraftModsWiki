@@ -37,9 +37,14 @@ const includedMods = getModsInModpack(modpack.id);
 const relatedModpacks = getRelatedModpacks(modpack.relatedModpacks);
 const relatedGuides = getGuidesForModpack(modpack.id);
 
+const base = import.meta.env.BASE_URL;
+const coverSrc = modpack.coverImage
+  ? (modpack.coverImage.startsWith('/') ? `${base}${modpack.coverImage.slice(1)}` : modpack.coverImage)
+  : undefined;
+
 const breadcrumbs = [
-  { label: '홈', href: '/' },
-  { label: '모드팩', href: '/modpacks/' },
+  { label: '홈', href: base },
+  { label: '모드팩', href: `${base}modpacks/` },
   { label: modpack.name },
 ];
 ---
@@ -53,10 +58,10 @@ const breadcrumbs = [
     <!-- 헤더: 썸네일 + 정보 + 추천박스 -->
     <header class="modpack-detail__header">
       <div class="modpack-detail__cover">
-        {modpack.coverImage ? (
+        {coverSrc ? (
           <>
-            <img class="modpack-detail__cover-blur" src={modpack.coverImage} alt="" aria-hidden="true" />
-            <img class="modpack-detail__cover-main" src={modpack.coverImage} alt={`${modpack.name} 커버`} />
+            <img class="modpack-detail__cover-blur" src={coverSrc} alt="" aria-hidden="true" />
+            <img class="modpack-detail__cover-main" src={coverSrc} alt={`${modpack.name} 커버`} />
           </>
         ) : (
           <div class="modpack-detail__cover-placeholder">
@@ -78,7 +83,7 @@ const breadcrumbs = [
 
         <div class="modpack-detail__tags">
           {modpack.tags.map(tag => (
-            <a href={`/modpacks/?tag=${encodeURIComponent(tag)}`} class="mc-badge mc-badge--tag">{tag}</a>
+            <a href={`${base}modpacks/?tag=${encodeURIComponent(tag)}`} class="mc-badge mc-badge--tag">{tag}</a>
           ))}
         </div>
       </div>
@@ -189,7 +194,7 @@ const breadcrumbs = [
         <h2 class="section-title">🔗 비슷한 모드팩</h2>
         <div class="related-grid">
           {relatedModpacks.map(rmp => (
-            <a href={`/modpacks/${rmp.slug}/`} class="related-card mc-card">
+            <a href={`${base}modpacks/${rmp.slug}/`} class="related-card mc-card">
               <h4>{rmp.name}</h4>
               <p>{rmp.summary}</p>
               <div class="related-card__meta">

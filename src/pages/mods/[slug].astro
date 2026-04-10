@@ -25,12 +25,13 @@ if (!mod) {
   return Astro.redirect('/404');
 }
 
+const base = import.meta.env.BASE_URL;
 const modpacks = getModpacksWithMod(mod.id);
 const relatedMods = getRelatedMods(mod.relatedMods);
 
 const breadcrumbs = [
-  { label: '홈', href: '/' },
-  { label: '모드', href: '/mods/' },
+  { label: '홈', href: base },
+  { label: '모드', href: `${base}mods/` },
   { label: mod.name },
 ];
 ---
@@ -48,7 +49,7 @@ const breadcrumbs = [
       <div class="mod-detail__meta">
         <span class="mc-badge">{mod.category}</span>
         {mod.tags.map(tag => (
-          <a href={`/mods/?tag=${encodeURIComponent(tag)}`} class="mc-badge mc-badge--tag">{tag}</a>
+          <a href={`${base}mods/?tag=${encodeURIComponent(tag)}`} class="mc-badge mc-badge--tag">{tag}</a>
         ))}
       </div>
     </header>

@@ -10,6 +10,7 @@ import { getFeaturedModpacks, getAllGuides } from '../utils/data';
 
 const featuredModpacks = getFeaturedModpacks();
 const recentGuides = getAllGuides().slice(0, 3);
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="MC Mod Wiki" description="마인크래프트 모드팩과 모드 정보를 한눈에. 공략, 팁, 가이드를 정리한 한국어 위키.">
@@ -21,7 +22,7 @@ const recentGuides = getAllGuides().slice(0, 3);
   <section class="hero">
     <!-- 배경 이미지 (블러 + 어둡게 처리) -->
     <div class="hero__bg" aria-hidden="true">
-      <img src="/images/hero-bg.png" alt="" loading="eager" />
+      <img src={`${base}images/hero-bg.png`} alt="" loading="eager" />
     </div>
     <div class="hero__overlay" aria-hidden="true"></div>
     <div class="hero__grass-line" aria-hidden="true"></div>
@@ -42,13 +43,13 @@ const recentGuides = getAllGuides().slice(0, 3);
           영어 위키를 뒤질 필요 없이, 여기서 빠르게 찾아보세요.
         </p>
         <div class="hero__actions">
-          <a href="/modpacks/" class="mc-btn mc-btn--primary">모드팩 둘러보기</a>
-          <a href="/guides/" class="mc-btn mc-btn--accent">초보자 가이드</a>
+          <a href={`${base}modpacks/`} class="mc-btn mc-btn--primary">모드팩 둘러보기</a>
+          <a href={`${base}guides/`} class="mc-btn mc-btn--accent">초보자 가이드</a>
         </div>
       </div>
 
       <!-- 검색 -->
-      <form action="/search/" method="get" class="hero__search" role="search">
+      <form action={`${base}search/`} method="get" class="hero__search" role="search">
         <div class="hero__search-wrap">
           <svg class="hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="8"/>
@@ -89,7 +90,7 @@ const recentGuides = getAllGuides().slice(0, 3);
         ))}
       </div>
       <div class="section__more">
-        <a href="/modpacks/" class="mc-btn">전체 모드팩 보기 →</a>
+        <a href={`${base}modpacks/`} class="mc-btn">전체 모드팩 보기 →</a>
       </div>
     </div>
   </section>
@@ -101,32 +102,32 @@ const recentGuides = getAllGuides().slice(0, 3);
     <div class="container">
       <h2 class="section-title">📂 카테고리</h2>
       <div class="category-grid">
-        <a href="/modpacks/?tag=하드코어" class="category-slot">
+        <a href={`${base}modpacks/?tag=하드코어`} class="category-slot">
           <span class="category-slot__icon">💀</span>
           <span class="category-slot__label">하드코어</span>
           <span class="category-slot__glow category-slot__glow--red" aria-hidden="true"></span>
         </a>
-        <a href="/modpacks/?tag=기술" class="category-slot">
+        <a href={`${base}modpacks/?tag=기술`} class="category-slot">
           <span class="category-slot__icon">⚙️</span>
           <span class="category-slot__label">기술</span>
           <span class="category-slot__glow category-slot__glow--iron" aria-hidden="true"></span>
         </a>
-        <a href="/modpacks/?tag=마법" class="category-slot">
+        <a href={`${base}modpacks/?tag=마법`} class="category-slot">
           <span class="category-slot__icon">✨</span>
           <span class="category-slot__label">마법</span>
           <span class="category-slot__glow category-slot__glow--amethyst" aria-hidden="true"></span>
         </a>
-        <a href="/modpacks/?tag=퀘스트" class="category-slot">
+        <a href={`${base}modpacks/?tag=퀘스트`} class="category-slot">
           <span class="category-slot__icon">📜</span>
           <span class="category-slot__label">퀘스트</span>
           <span class="category-slot__glow category-slot__glow--gold" aria-hidden="true"></span>
         </a>
-        <a href="/modpacks/?tag=모험" class="category-slot">
+        <a href={`${base}modpacks/?tag=모험`} class="category-slot">
           <span class="category-slot__icon">🗺️</span>
           <span class="category-slot__label">모험</span>
           <span class="category-slot__glow category-slot__glow--emerald" aria-hidden="true"></span>
         </a>
-        <a href="/modpacks/?tag=키친싱크" class="category-slot">
+        <a href={`${base}modpacks/?tag=키친싱크`} class="category-slot">
           <span class="category-slot__icon">🧰</span>
           <span class="category-slot__label">키친싱크</span>
           <span class="category-slot__glow category-slot__glow--diamond" aria-hidden="true"></span>
@@ -152,7 +153,7 @@ const recentGuides = getAllGuides().slice(0, 3);
         ))}
       </div>
       <div class="section__more">
-        <a href="/guides/" class="mc-btn">모든 가이드 보기 →</a>
+        <a href={`${base}guides/`} class="mc-btn">모든 가이드 보기 →</a>
       </div>
     </div>
   </section>

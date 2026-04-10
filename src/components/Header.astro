@@ -3,27 +3,28 @@
  * 사이트 헤더 - 마인크래프트 메뉴 바에서 영감
  * 오크 나무 판자 텍스처 느낌의 상단 바
  */
+const base = import.meta.env.BASE_URL;
 ---
 
 <header class="header">
   <div class="header__inner container">
     <!-- 로고 -->
-    <a href="/" class="header__logo" aria-label="MC Mod Wiki 홈">
+    <a href={base} class="header__logo" aria-label="MC Mod Wiki 홈">
       <span class="header__logo-icon" aria-hidden="true">⛏</span>
       <span class="header__logo-text">MC<span class="header__logo-accent">Mod</span>Wiki</span>
     </a>
 
     <!-- 데스크톱 네비게이션 -->
     <nav class="header__nav" aria-label="주요 메뉴">
-      <a href="/modpacks/" class="header__link">
+      <a href={`${base}modpacks/`} class="header__link">
         <span class="header__link-icon" aria-hidden="true">📦</span>
         모드팩
       </a>
-      <a href="/mods/" class="header__link">
+      <a href={`${base}mods/`} class="header__link">
         <span class="header__link-icon" aria-hidden="true">🧩</span>
         모드
       </a>
-      <a href="/guides/" class="header__link">
+      <a href={`${base}guides/`} class="header__link">
         <span class="header__link-icon" aria-hidden="true">📖</span>
         가이드
       </a>
@@ -31,7 +32,7 @@
 
     <!-- 검색 바 (데스크톱) -->
     <div class="header__search">
-      <form action="/search/" method="get" role="search">
+      <form action={`${base}search/`} method="get" role="search">
         <div class="header__search-wrap">
           <svg class="header__search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
             <circle cx="11" cy="11" r="8"/>
@@ -64,16 +65,16 @@
   <!-- 모바일 메뉴 -->
   <nav id="mobile-menu" class="header__mobile-menu" aria-label="모바일 메뉴" hidden>
     <div class="header__mobile-inner">
-      <a href="/modpacks/" class="header__mobile-link">
+      <a href={`${base}modpacks/`} class="header__mobile-link">
         <span aria-hidden="true">📦</span> 모드팩
       </a>
-      <a href="/mods/" class="header__mobile-link">
+      <a href={`${base}mods/`} class="header__mobile-link">
         <span aria-hidden="true">🧩</span> 모드
       </a>
-      <a href="/guides/" class="header__mobile-link">
+      <a href={`${base}guides/`} class="header__mobile-link">
         <span aria-hidden="true">📖</span> 가이드
       </a>
-      <form action="/search/" method="get" class="header__mobile-search" role="search">
+      <form action={`${base}search/`} method="get" class="header__mobile-search" role="search">
         <input
           type="search"
           name="q"

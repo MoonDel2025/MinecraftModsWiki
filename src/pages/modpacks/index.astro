@@ -8,6 +8,7 @@ import ModpackCard from '../../components/ModpackCard.astro';
 import TagList from '../../components/TagList.astro';
 import { getAllModpacks, getAllTags } from '../../utils/data';
 
+const base = import.meta.env.BASE_URL;
 const modpacks = getAllModpacks();
 const allTags = getAllTags(modpacks);
 const tag = Astro.url.searchParams.get('tag');
@@ -16,7 +17,7 @@ const filteredModpacks = tag
   : modpacks;
 
 const breadcrumbs = [
-  { label: '홈', href: '/' },
+  { label: '홈', href: base },
   { label: '모드팩' },
 ];
 ---
@@ -37,7 +38,7 @@ const breadcrumbs = [
 
     <!-- 필터 -->
     <div class="filter-bar">
-      <TagList tags={allTags} baseUrl="/modpacks/" activeTag={tag || undefined} />
+      <TagList tags={allTags} baseUrl={`${base}modpacks/`} activeTag={tag || undefined} />
     </div>
 
     <!-- 검색 (클라이언트 사이드) -->
@@ -74,7 +75,7 @@ const breadcrumbs = [
     {filteredModpacks.length === 0 && (
       <div class="empty-state">
         <p>해당 조건에 맞는 모드팩이 없습니다.</p>
-        <a href="/modpacks/" class="mc-btn">전체 보기</a>
+        <a href={`${base}modpacks/`} class="mc-btn">전체 보기</a>
       </div>
     )}
   </section>

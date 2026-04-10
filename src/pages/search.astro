@@ -36,8 +36,9 @@ const matchedGuides = allGuides.filter(g =>
 );
 const totalResults = matchedModpacks.length + matchedMods.length + matchedGuides.length;
 
+const base = import.meta.env.BASE_URL;
 const breadcrumbs = [
-  { label: '홈', href: '/' },
+  { label: '홈', href: base },
   { label: '검색 결과' },
 ];
 ---
@@ -50,7 +51,7 @@ const breadcrumbs = [
   <section class="section container">
     <!-- 검색 바 -->
     <div class="search-page__bar">
-      <form action="/search/" method="get" role="search">
+      <form action={`${base}search/`} method="get" role="search">
         <div class="search-page__wrap">
           <svg class="search-page__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="8"/>
@@ -142,8 +143,8 @@ const breadcrumbs = [
         <p class="search-page__no-results-text">검색 결과가 없습니다.</p>
         <p class="search-page__no-results-hint">다른 키워드로 검색해보세요.</p>
         <div class="search-page__suggestions">
-          <a href="/modpacks/" class="mc-btn">모드팩 둘러보기</a>
-          <a href="/mods/" class="mc-btn">모드 둘러보기</a>
+          <a href={`${base}modpacks/`} class="mc-btn">모드팩 둘러보기</a>
+          <a href={`${base}mods/`} class="mc-btn">모드 둘러보기</a>
         </div>
       </div>
     )}
