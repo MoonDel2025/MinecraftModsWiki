@@ -87,6 +87,7 @@ const MODPACK_ORDER: string[] = [
   'nightfallcraft-casket-of-reveries',
   'atm10-sky',
   'ftb-stoneblock-4',
+  'ciscos-fantasy-medieval-rpg-ultimate',
 ];
 
 /** 모든 모드팩 JSON 파일을 로드합니다 (MODPACK_ORDER 순서) */
