@@ -5,7 +5,7 @@
  * 새 모드팩/모드/가이드를 추가하면 자동 반영됩니다.
  */
 import type { APIRoute } from 'astro';
-import { getAllModpacks, getAllMods, getAllGuides } from '../utils/data';
+import { getAllModpacks, getAllMods, getAllGuides, getAllInfo } from '../utils/data';
 
 const SITE = 'https://minecraftmodwiki.com';
 
@@ -27,6 +27,7 @@ export const GET: APIRoute = async () => {
     { url: '/modpacks/', changefreq: 'daily', priority: 0.9, lastmod: today },
     { url: '/mods/', changefreq: 'daily', priority: 0.9, lastmod: today },
     { url: '/guides/', changefreq: 'weekly', priority: 0.8, lastmod: today },
+    { url: '/info/', changefreq: 'weekly', priority: 0.8, lastmod: today },
 
     // 검색
     { url: '/search/', changefreq: 'monthly', priority: 0.3 },
@@ -65,6 +66,16 @@ export const GET: APIRoute = async () => {
       changefreq: 'monthly',
       priority: 0.7,
       lastmod: today,
+    });
+  }
+
+  // 유용한 정보 (블로그형 글)
+  for (const article of getAllInfo()) {
+    entries.push({
+      url: `/info/${article.slug}/`,
+      changefreq: 'monthly',
+      priority: 0.7,
+      lastmod: article.publishedDate,
     });
   }
 

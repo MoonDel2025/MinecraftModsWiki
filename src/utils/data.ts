@@ -50,6 +50,24 @@ export interface Guide {
   relatedMods: string[];
 }
 
+/**
+ * 유용한 정보 (블로그형 글)
+ * - 모드 카테고리/장르별 추천, 비교, 해설 등
+ */
+export interface Info {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  category: string;
+  tags: string[];
+  publishedDate: string; // YYYY-MM-DD
+  thumbnail?: string;
+  body: string; // 마크다운
+  relatedModpacks: string[];
+  relatedMods: string[];
+}
+
 // --- 데이터 로더 ---
 
 /**
@@ -101,6 +119,14 @@ export function getAllGuides(): Guide[] {
   return Object.values(files).sort((a, b) => a.title.localeCompare(b.title));
 }
 
+/** 모든 유용한 정보 글을 로드합니다 (최신순) */
+export function getAllInfo(): Info[] {
+  const files = import.meta.glob<Info>('../data/info/*.json', { eager: true, import: 'default' });
+  return Object.values(files).sort((a, b) =>
+    b.publishedDate.localeCompare(a.publishedDate)
+  );
+}
+
 // --- 개별 조회 ---
 
 export function getModpackBySlug(slug: string): Modpack | undefined {
@@ -113,6 +139,10 @@ export function getModBySlug(slug: string): Mod | undefined {
 
 export function getGuideBySlug(slug: string): Guide | undefined {
   return getAllGuides().find(g => g.slug === slug);
+}
+
+export function getInfoBySlug(slug: string): Info | undefined {
+  return getAllInfo().find(i => i.slug === slug);
 }
 
 // --- 관계 조회 ---

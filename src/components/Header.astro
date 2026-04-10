@@ -28,6 +28,10 @@ const base = import.meta.env.BASE_URL;
         <span class="header__link-icon" aria-hidden="true">📖</span>
         가이드
       </a>
+      <a href={`${base}info/`} class="header__link">
+        <span class="header__link-icon" aria-hidden="true">💡</span>
+        유용한 정보
+      </a>
     </nav>
 
     <!-- 검색 바 (데스크톱) -->
@@ -73,6 +77,9 @@ const base = import.meta.env.BASE_URL;
       </a>
       <a href={`${base}guides/`} class="header__mobile-link">
         <span aria-hidden="true">📖</span> 가이드
+      </a>
+      <a href={`${base}info/`} class="header__mobile-link">
+        <span aria-hidden="true">💡</span> 유용한 정보
       </a>
       <form action={`${base}search/`} method="get" class="header__mobile-search" role="search">
         <input

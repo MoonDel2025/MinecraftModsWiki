@@ -1,0 +1,174 @@
+---
+/**
+ * 유용한 정보 목록 페이지 (블로그형)
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllInfo } from '../../utils/data';
+
+const base = import.meta.env.BASE_URL;
+const articles = getAllInfo();
+const categories = [...new Set(articles.map(a => a.category))].sort();
+
+const breadcrumbs = [
+  { label: '홈', href: base },
+  { label: '유용한 정보' },
+];
+---
+
+<BaseLayout
+  title="유용한 정보"
+  description="마인크래프트 모드와 모드팩에 관한 유용한 정보, 비교, 추천을 정리한 블로그형 콘텐츠. 백팩 모드, 미니맵 모드 등 카테고리별 모드 추천 글."
+  breadcrumbs={breadcrumbs}
+>
+  <section class="section container">
+    <div class="page-header">
+      <h1 class="page-header__title">💡 유용한 정보</h1>
+      <p class="page-header__desc">
+        모드와 모드팩에 관한 유용한 비교, 추천, 해설 글을 모았습니다.
+        총 {articles.length}개의 글이 있습니다.
+      </p>
+    </div>
+
+    {articles.length === 0 ? (
+      <div class="empty-state">
+        <p>아직 등록된 글이 없습니다.</p>
+      </div>
+    ) : (
+      <div class="info-grid">
+        {articles.map(article => (
+          <a href={`${base}info/${article.slug}/`} class="info-card">
+            <div class="info-card__body">
+              <div class="info-card__meta">
+                <span class="mc-badge mc-badge--tag">{article.category}</span>
+                <time class="info-card__date" datetime={article.publishedDate}>
+                  {article.publishedDate}
+                </time>
+              </div>
+              <h2 class="info-card__title">{article.title}</h2>
+              <p class="info-card__summary">{article.summary}</p>
+              <div class="info-card__tags">
+                {article.tags.slice(0, 4).map(tag => (
+                  <span class="mc-badge mc-badge--tag">#{tag}</span>
+                ))}
+              </div>
+              <span class="info-card__cta">읽어보기 →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .page-header__title {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-2);
+  }
+
+  .page-header__desc {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .info-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-6);
+    box-shadow:
+      var(--shadow-sm),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: all var(--transition-normal);
+    border-left: 3px solid var(--color-amethyst);
+  }
+
+  .info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-color-light);
+    border-left-color: var(--color-end-glow);
+  }
+
+  .info-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .info-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-1);
+  }
+
+  .info-card__date {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .info-card__title {
+    font-size: var(--font-size-xl);
+    color: var(--text-heading);
+    margin: 0;
+    line-height: 1.3;
+    transition: color var(--transition-fast);
+  }
+
+  .info-card:hover .info-card__title {
+    color: var(--color-end-glow);
+  }
+
+  .info-card__summary {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: var(--space-1) 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .info-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: var(--space-1);
+  }
+
+  .info-card__cta {
+    font-size: var(--font-size-sm);
+    color: var(--text-link);
+    font-weight: 600;
+    margin-top: var(--space-2);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-12);
+    color: var(--text-muted);
+  }
+
+  @media (min-width: 768px) {
+    .info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
